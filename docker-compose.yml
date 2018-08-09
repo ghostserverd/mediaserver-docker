@@ -1,0 +1,101 @@
+# filebot -script fn:amc --output /media --action duplicate --conflict auto -non-strict --log-file /media/fb.log --def unsorted=y music=y artwork=y subtitles=en movieFormat={plex} seriesFormat={plex} animeFormat={plex} musicFormat={plex} ut_dir="%R" ut_title="%N"
+# docker system prune --all --force --volumes
+# https://www.filebot.net/purchase.html
+
+version: "2"
+
+services:
+  qbittorrent:
+    build:
+      context: ./docker-qbittorrent-filebot-master
+      dockerfile: Dockerfile
+      args:
+        PUID: ${USER_ID}
+        PGID: ${USER_ID}
+    container_name: qbittorrent
+    restart: always
+    ports:
+      - "6881:6881"
+      - "6881:6881/udp"
+      - "8080:8080"
+    network_mode: host
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${USER_ID}
+      - TZ=America/Los_Angeles
+    volumes:
+      - ${CONFIG_DIR}/qbittorrent:/config
+      - ${DOWNLOAD_DIR}:/downloads
+      - ${MEDIA_DIR}:/media
+
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    restart: always
+    ports:
+      - "7878:7878"
+    network_mode: host
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${USER_ID}
+      - TZ=America/Los_Angeles
+    volumes:
+      - ${CONFIG_DIR}/radarr:/config
+      - ${DOWNLOAD_DIR}:/data/completed/movies/
+      - ${MOVIES_DIR}:/movies
+  
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    restart: always
+    ports:
+      - "8989:8989"
+    network_mode: host
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${USER_ID}
+      - TZ=America/Los_Angeles
+    volumes:
+      - ${CONFIG_DIR}/sonarr:/config
+      - ${DOWNLOAD_DIR}:/data/completed/tv/
+      - ${TV_DIR}:/tv
+      
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    restart: always
+    ports:
+      - "9117:9117"
+    network_mode: host
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${USER_ID}
+      - TZ=America/Los_Angeles
+      - JACKETT_KEY=9818
+    volumes:
+      - ${CONFIG_DIR}/jackett:/config
+      - ${CONFIG_DIR}/jackett/downloads:/downloads
+
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    restart: always
+    ports:
+      - "32400:32400"
+      - "1900:1900"
+      - "3005:3005"
+      - "5353:5353"
+      - "8324:8324"
+      - "32410:32410"
+      - "32412:32412"
+      - "32413:32413"
+      - "32414:32414"
+      - "32469:32469"
+    network_mode: host
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${USER_ID}
+      - TZ=America/Los_Angeles
+    volumes:
+      - ${CONFIG_DIR}/plex:/config
+      - ${MEDIA_DIR}:/data

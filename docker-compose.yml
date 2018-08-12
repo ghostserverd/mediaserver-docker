@@ -92,6 +92,7 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=America/Los_Angeles
+      - VERSION=latest
     volumes:
       - ${CONFIG_DIR}/plex:/config
       - ${MEDIA_DIR}:/data

@@ -35,7 +35,8 @@ The services are all running in `network=host` mode so they can see each other w
 ### Installation
 ##### Install Docker
   - https://docs.docker.com/install/#supported-platforms
-- Install Docker Compose
+
+##### Install Docker Compose
   - https://docs.docker.com/compose/install/#install-compose
 
 ##### Clone this repo

@@ -14,8 +14,8 @@ services:
       - "8080:8080"
     network_mode: host
     environment:
-      - PUID=${USER_ID}
-      - PGID=${USER_ID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=America/Los_Angeles
     volumes:
       - ${CONFIG_DIR}/qbittorrent:/config
@@ -30,8 +30,8 @@ services:
       - "8989:8989"
     network_mode: host
     environment:
-      - PUID=${USER_ID}
-      - PGID=${USER_ID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=America/Los_Angeles
     volumes:
       - ${CONFIG_DIR}/sonarr:/config
@@ -46,8 +46,8 @@ services:
       - "7878:7878"
     network_mode: host
     environment:
-      - PUID=${USER_ID}
-      - PGID=${USER_ID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=America/Los_Angeles
     volumes:
       - ${CONFIG_DIR}/radarr:/config
@@ -62,8 +62,8 @@ services:
       - "9117:9117"
     network_mode: host
     environment:
-      - PUID=${USER_ID}
-      - PGID=${USER_ID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=America/Los_Angeles
       - JACKETT_KEY=9818
     volumes:
@@ -87,8 +87,8 @@ services:
       - "32469:32469"
     network_mode: host
     environment:
-      - PUID=${USER_ID}
-      - PGID=${USER_ID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=America/Los_Angeles
     volumes:
       - ${CONFIG_DIR}/plex:/config

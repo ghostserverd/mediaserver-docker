@@ -16,6 +16,8 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
+      - QBIT_WEBUI_USER=${QBIT_WEBUI_USER}
+      - QBIT_WEBUI_PASS=${QBIT_WEBUI_PASS}
       - TZ=America/Los_Angeles
     volumes:
       - ${CONFIG_DIR}/qbittorrent:/config

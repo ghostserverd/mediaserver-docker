@@ -52,6 +52,7 @@ cd mediaserver-docker
 docker-compose up
 ```
 
+### Configuration
 ##### Configure Jackett
 `<server-ip>:9117`
 

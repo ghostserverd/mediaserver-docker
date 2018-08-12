@@ -1,4 +1,3 @@
-# filebot -script fn:amc --output /media --action duplicate --conflict auto -non-strict --log-file /media/fb.log --def unsorted=y music=y artwork=y subtitles=en movieFormat={plex} seriesFormat={plex} animeFormat={plex} musicFormat={plex} ut_dir="%R" ut_title="%N"
 # docker system prune --all --force --volumes
 # https://www.filebot.net/purchase.html
 
@@ -6,12 +5,7 @@ version: "2"
 
 services:
   qbittorrent:
-    build:
-      context: ./docker-qbittorrent-filebot-master
-      dockerfile: Dockerfile
-      args:
-        PUID: ${USER_ID}
-        PGID: ${USER_ID}
+    image: ghostserver/qbittorrent-filebot
     container_name: qbittorrent
     restart: always
     ports:
@@ -28,24 +22,8 @@ services:
       - ${DOWNLOAD_DIR}:/downloads
       - ${MEDIA_DIR}:/media
 
-  radarr:
-    image: linuxserver/radarr
-    container_name: radarr
-    restart: always
-    ports:
-      - "7878:7878"
-    network_mode: host
-    environment:
-      - PUID=${USER_ID}
-      - PGID=${USER_ID}
-      - TZ=America/Los_Angeles
-    volumes:
-      - ${CONFIG_DIR}/radarr:/config
-      - ${DOWNLOAD_DIR}:/data/completed/movies/
-      - ${MOVIES_DIR}:/movies
-  
   sonarr:
-    image: linuxserver/sonarr
+    image: ghostserver/sonarr
     container_name: sonarr
     restart: always
     ports:
@@ -59,7 +37,23 @@ services:
       - ${CONFIG_DIR}/sonarr:/config
       - ${DOWNLOAD_DIR}:/data/completed/tv/
       - ${TV_DIR}:/tv
-      
+
+  radarr:
+    image: ghostserver/radarr
+    container_name: radarr
+    restart: always
+    ports:
+      - "7878:7878"
+    network_mode: host
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${USER_ID}
+      - TZ=America/Los_Angeles
+    volumes:
+      - ${CONFIG_DIR}/radarr:/config
+      - ${DOWNLOAD_DIR}:/data/completed/movies/
+      - ${MOVIES_DIR}:/movies
+
   jackett:
     image: linuxserver/jackett
     container_name: jackett
@@ -77,7 +71,7 @@ services:
       - ${CONFIG_DIR}/jackett/downloads:/downloads
 
   plex:
-    image: linuxserver/plex
+    image: ghostserver/plex
     container_name: plex
     restart: always
     ports:

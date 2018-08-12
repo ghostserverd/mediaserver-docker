@@ -103,3 +103,27 @@ docker-compose up
 docker-compose down
 docker-compose up
 ```
+
+## Thank You
+#### Linuxserver
+[linuxserverurl]: https://linuxserver.io
+[linuxserverforumurl]: https://forum.linuxserver.io
+[ircurl]: https://www.linuxserver.io/irc/
+[podcasturl]: https://www.linuxserver.io/podcast/
+
+Most of these containers are config wrappers around [LinuxServer.io][linuxserverurl] containers. Without their amazing linuxserver containers, none of this would have been possible. If you find this automated media server useful, go donate to them!
+
+* [forum.linuxserver.io][linuxserverforumurl]
+* [IRC][ircurl] on freenode at `#linuxserver.io`
+* [Podcast][podcasturl] covers everything to do with getting the most from your Linux Server plus a focus on all things Docker and containerisation!
+
+#### Filebot
+[fileboturl]: https://www.filebot.net/
+[filebotforumurl]: https://www.filebot.net/forums/
+[filebotpurchaseurl]: https://www.filebot.net/purchase.html
+
+This would also not be possible without filebot. This is currently using the free linux version `4.7.7` for now, but this may update to use the paid `4.8.2` in the future. If it does so, there will be a separate tag to stay on `4.7.7`, but it will likely become unsupported.
+
+* [Filebot] [fileboturl]
+* [Forum][filebotforumurl]
+* [Purchase][filebotpurchaseurl]

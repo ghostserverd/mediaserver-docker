@@ -124,6 +124,6 @@ Most of these containers are config wrappers around [LinuxServer.io][linuxserver
 
 This would also not be possible without filebot. This is currently using the free linux version `4.7.7` for now, but this may update to use the paid `4.8.2` in the future. If it does so, there will be a separate tag to stay on `4.7.7`, but it will likely become unsupported.
 
-* [Filebot] [fileboturl]
+* [Filebot][fileboturl]
 * [Forum][filebotforumurl]
 * [Purchase][filebotpurchaseurl]

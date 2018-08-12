@@ -4,13 +4,13 @@
 This is an automated media server set up in docker containers via docker-compose. This goal of this setup is to automate as much of the installation and configuration as possible with sane defaults.
 
 The end result of this setup is a media server with the following components
-: `Plex`
-: `qBittorrent`
-  : with `filebot` binary
-  : auto-configured to run `filebot` on torrent completion
-: `sonarr`
-: `radarr`
-: `jackett`
+- `Plex`
+- `qBittorrent`
+  - with `filebot` binary
+  - auto-configured to run `filebot` on torrent completion
+- `sonarr`
+- `radarr`
+- `jackett`
 
 The high-level steps for setup are as follows
 1. Install docker and docker-compose

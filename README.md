@@ -110,12 +110,14 @@ docker-compose up
 [linuxserverforumurl]: https://forum.linuxserver.io
 [ircurl]: https://www.linuxserver.io/irc/
 [podcasturl]: https://www.linuxserver.io/podcast/
+[linuxserverdonate]: https://www.linuxserver.io/donations/
 
 Most of these containers are config wrappers around [LinuxServer.io][linuxserverurl] containers. Without their amazing linuxserver containers, none of this would have been possible. If you find this automated media server useful, go donate to them!
 
 * [forum.linuxserver.io][linuxserverforumurl]
 * [IRC][ircurl] on freenode at `#linuxserver.io`
 * [Podcast][podcasturl] covers everything to do with getting the most from your Linux Server plus a focus on all things Docker and containerisation!
+* [Donate][linuxserverdonate]
 
 #### Filebot
 [fileboturl]: https://www.filebot.net/

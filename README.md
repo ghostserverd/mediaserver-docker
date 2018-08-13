@@ -110,7 +110,7 @@ docker-compose up
 [linuxserverforumurl]: https://forum.linuxserver.io
 [ircurl]: https://www.linuxserver.io/irc/
 [podcasturl]: https://www.linuxserver.io/podcast/
-[linuxserverdonate]: https://www.linuxserver.io/donations/
+[linuxserverdonate]: https://www.linuxserver.io/donate/
 
 Most of these containers are config wrappers around [LinuxServer.io][linuxserverurl] containers. Without their amazing linuxserver containers, none of this would have been possible. If you find this automated media server useful, go donate to them!
 

@@ -47,19 +47,19 @@ Each service is available on its own ports:
 The services are all running in `network=host` mode so they can see each other without having to do extra port mapping.
 
 # Installation
-### Install Docker
+## Install Docker
   - https://docs.docker.com/install/#supported-platforms
 
-### Install Docker Compose
+## Install Docker Compose
   - https://docs.docker.com/compose/install/#install-compose
 
-### Clone this repo
+## Clone this repo
 ```
 git clone https://github.com/ghostserverd/mediaserver-docker.git
 cd mediaserver-docker
 ```
 
-### Build your `.env` file
+## Build your `.env` file
 ```
 cp .env_sample .env
 id $USER # save the result of this for building your .env file below
@@ -85,14 +85,14 @@ Modify the `.env` file to specify the following configurations. Note that these 
 
 - `PGID` is the unix `GID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine as mentioned above.
 
-### Deploy the service
+## Deploy the service
 ```
 docker-compose up
 ```
 Append `-d` to run in detached mode. The first time you run it, it's probably a good idea to not run in attached mode so you can watch all of the logs for issues.
 
 # Configuration
-### Configure Jackett
+## Configure Jackett
 `<server-ip>:9117`
 
 `Jackett` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `Jackett` already.
@@ -107,7 +107,7 @@ Append `-d` to run in detached mode. The first time you run it, it's probably a 
 - Copy the `API Key` from the top right corner and save it somewhere
 - Click the `Copy Torznab Feed` on the tracker you just added and paste it somewhere to save it
 
-### Configure Sonarr
+## Configure Sonarr
 `<server-ip>:8989`
 
 `Sonarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `Sonarr` already. Do make sure that your download path is set to `/data/completed/tv` as that is the directory that the container has permissions to.
@@ -160,7 +160,7 @@ Step-by-step for those who need it
     - Click the `+` sign
 - There are many other configuration options for `Sonarr` that are not covered here. `Sonarr`'s webpage is [here](https://sonarr.tv/)
 
-### Configure Radarr
+## Configure Radarr
 `<server-ip>:7878`
 
 `Radarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `Radarr` already. Do make sure that your download path is set to `/data/completed/movies` as that is the directory that the container has permissions to.
@@ -212,7 +212,7 @@ Step-by-step for those who need it
     - Click the `+` sign
 - There are many other configuration options for `Radarr` that are not covered here. `Radarr`'s webpage is [here](https://radarr.video/)
 
-### Configure qBittorrent
+## Configure qBittorrent
 `<server-ip>:8080`
 
 qBittorrent should already be configured. It automatically has configuration for the following:
@@ -223,7 +223,7 @@ qBittorrent should already be configured. It automatically has configuration for
 
 If you want other `.env` configurations to be available for `qBittorrent`, open an issue here.
 
-### Configure Plex
+## Configure Plex
 `<server-ip>:32400/web`
 - Add some libraries
   - TV Shows will be at `/data/TV Shows` assuming you followed the `/media/TV Shows` convention for `TV_DIR`
@@ -238,7 +238,7 @@ docker-compose up
 ```
 
 # Thank You
-### Linuxserver
+## Linuxserver
 [linuxserverurl]: https://linuxserver.io
 [linuxserverforumurl]: https://forum.linuxserver.io
 [ircurl]: https://www.linuxserver.io/irc/
@@ -252,7 +252,7 @@ Most of these containers are config wrappers around [LinuxServer.io][linuxserver
 * [Podcast][podcasturl] covers everything to do with getting the most from your Linux Server plus a focus on all things Docker and containerisation!
 * [Donate][linuxserverdonate]
 
-### Filebot
+## Filebot
 [fileboturl]: https://www.filebot.net/
 [filebotforumurl]: https://www.filebot.net/forums/
 [filebotpurchaseurl]: https://www.filebot.net/purchase.html
@@ -263,5 +263,5 @@ This would also not be possible without filebot. This is currently using the fre
 * [Forum][filebotforumurl]
 * [Purchase][filebotpurchaseurl]
 
-### patorjk
+## patorjk
 Thanks to patorjk for his [ascii text generator](http://patorjk.com/software/taag/#p=display&f=Ogre&t=ghost)

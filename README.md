@@ -34,15 +34,20 @@ The high-level steps for setup are as follows
 
 Once these steps have been completed, it is possible to add a TV Show or Movie to `sonarr` / `radarr`, have it automatically download them when available, and then it will be automatically copied into your `plex` libraries. Post-installation, this should be a fully-automated media server (the exception to this is removing completed downloads).
 
-📓 This has only been tested on Ubuntu 18.04 LTS but it should work just fine on other linux distors. MacOS and Windows are unsupported. If you test it on MacOS or Windows and it works, let me know!
+📓 This has only been tested on Ubuntu 18.04 LTS but it should work just fine on other linux distros. MacOS and Windows are unsupported. If you test it on MacOS or Windows and it works, let me know!
 
 # Network
 Each service is available on its own ports:
-- `qBittorrent` : `8080`
-- `sonarr` : `8989`
-- `radarr` : `7878`
-- `jackett` : `9117`
-- `plex` : `32400/web`
+
+| Service | Port |
+| ------- | ---- |
+| qBittorrent | 8080 |
+| sonarr | 8989 |
+| radarr | 7878 |
+| jackett | 9117 |
+| plex | 32400 |
+
+📓To reach `plex`, append `/web` to the address e.g. `192.168.1.11:32400/web`
 
 The services are all running in `network=host` mode so they can see each other without having to do extra port mapping.
 
@@ -89,7 +94,7 @@ Modify the `.env` file to specify the following configurations. Note that these 
 ```
 docker-compose up
 ```
-Append `-d` to run in detached mode. The first time you run it, it's probably a good idea to not run in attached mode so you can watch all of the logs for issues.
+Append `-d` to run in detached mode. The first time you run it, it is probably a good idea to not run in dettached mode (i.e. DON'T append `-d`) so you can watch all of the logs for issues.
 
 # Configuration
 ## Configure Jackett

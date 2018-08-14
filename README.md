@@ -1,6 +1,6 @@
-# Automated Media Server
+# Automated Media Server 👻
 ---
-## About 
+# About 
 This is an automated media server set up in docker containers via docker-compose. This goal of this setup is to automate as much of the installation and configuration as possible.
 
 The end result of this setup is a media server with the following components
@@ -24,7 +24,7 @@ Once these steps have been completed, it is possible to add a TV Show or Movie t
 
 📓 This has only been tested on Ubuntu 18.04 LTS but it should work just fine on other linux distors. MacOS and Windows are unsupported. If you test it on MacOS or Windows and it works, let me know!
 
-## Network
+# Network
 Each service is available on its own ports:
 - `qBittorrent` : `8080`
 - `sonarr` : `8989`
@@ -34,20 +34,20 @@ Each service is available on its own ports:
 
 The services are all running in `network=host` mode so they can see each other without having to do extra port mapping.
 
-## Installation
-#### Install Docker
+# Installation
+### Install Docker
   - https://docs.docker.com/install/#supported-platforms
 
-#### Install Docker Compose
+### Install Docker Compose
   - https://docs.docker.com/compose/install/#install-compose
 
-#### Clone this repo
+### Clone this repo
 ```
 git clone https://github.com/ghostserverd/mediaserver-docker.git
 cd mediaserver-docker
 ```
 
-#### Build your `.env` file
+### Build your `.env` file
 ```
 cp .env_sample .env
 id $USER # save the result of this for building your .env file below
@@ -73,14 +73,14 @@ Modify the `.env` file to specify the following configurations. Note that these 
 
 - `PGID` is the unix `GID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine as mentioned above.
 
-#### Deploy the service
+### Deploy the service
 ```
 docker-compose up
 ```
 Append `-d` to run in detached mode. The first time you run it, it's probably a good idea to not run in attached mode so you can watch all of the logs for issues.
 
-## Configuration
-#### Configure Jackett
+# Configuration
+### Configure Jackett
 `<server-ip>:9117`
 - Add an Indexer
   - Click `+ Add Indexer`
@@ -92,7 +92,7 @@ Append `-d` to run in detached mode. The first time you run it, it's probably a 
 - Copy the `API Key` from the top right corner and save it somewhere
 - Click the `Copy Torznab Feed` and paste it somewhere to save it
 
-#### Configure Sonarr
+### Configure Sonarr
 `<server-ip>:8989`
 - Add an Indexer
   - Click on the `Settings` button at the top
@@ -140,14 +140,14 @@ Append `-d` to run in detached mode. The first time you run it, it's probably a 
     - Click on the `+` sign
 - There are many other configuration options for `Sonarr` that are not covered here. `Sonarr`'s webpage is [here](https://sonarr.tv/)
 
-#### Configure Radarr
+### Configure Radarr
 `<server-ip>:7878`
 
-#### Configure qBittorrent
+### Configure qBittorrent
 `<server-ip>:8080`
 - This is mostly already configured. It automatically has configuration for `filebot` download completion handling, the username / password you set in your `.env`, and sets your download directory to `/downloads/`. If you want other `.env` configurations to be available for `qBittorrent`, open an issue here.
 
-#### Configure Plex
+### Configure Plex
 `<server-ip>:32400/web`
 - Add some libraries
   - TV Shows will be at `/data/TV Shows` assuming you followed the `/media/TV Shows` convention for `TV_DIR`
@@ -161,8 +161,8 @@ docker-compose down
 docker-compose up
 ```
 
-## Thank You
-#### Linuxserver
+# Thank You
+### Linuxserver
 [linuxserverurl]: https://linuxserver.io
 [linuxserverforumurl]: https://forum.linuxserver.io
 [ircurl]: https://www.linuxserver.io/irc/
@@ -176,7 +176,7 @@ Most of these containers are config wrappers around [LinuxServer.io][linuxserver
 * [Podcast][podcasturl] covers everything to do with getting the most from your Linux Server plus a focus on all things Docker and containerisation!
 * [Donate][linuxserverdonate]
 
-#### Filebot
+### Filebot
 [fileboturl]: https://www.filebot.net/
 [filebotforumurl]: https://www.filebot.net/forums/
 [filebotpurchaseurl]: https://www.filebot.net/purchase.html

@@ -5,7 +5,7 @@ version: "2"
 
 services:
   qbittorrent:
-    image: ghostserver/qbittorrent-filebot
+    image: ghostserverd/qbittorrent-filebot
     container_name: qbittorrent
     restart: always
     ports:
@@ -25,7 +25,7 @@ services:
       - ${MEDIA_DIR}:/media
 
   sonarr:
-    image: ghostserver/sonarr
+    image: ghostserverd/sonarr
     container_name: sonarr
     restart: always
     ports:
@@ -41,7 +41,7 @@ services:
       - ${TV_DIR}:/tv
 
   radarr:
-    image: ghostserver/radarr
+    image: ghostserverd/radarr
     container_name: radarr
     restart: always
     ports:
@@ -73,7 +73,7 @@ services:
       - ${CONFIG_DIR}/jackett/downloads:/downloads
 
   plex:
-    image: ghostserver/plex
+    image: ghostserverd/plex
     container_name: plex
     restart: always
     ports:

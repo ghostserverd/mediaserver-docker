@@ -81,9 +81,9 @@ Modify the `.env` file to specify the following configurations. Note that these 
 
 - `QBIT_WEBUI_PASS` is the Web UI password for `qBittorrent`. The default is `adminadmin`.
 
-- `PUID` is the unix `UID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine as mentioned above.
+- `PUID` is the unix `UID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine.
 
-- `PGID` is the unix `GID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine as mentioned above.
+- `PGID` is the unix `GID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine.
 
 ## Deploy the service
 ```

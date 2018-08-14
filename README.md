@@ -1,7 +1,7 @@
 # Automated Media Server
 ---
 ## About 
-This is an automated media server set up in docker containers via docker-compose. This goal of this setup is to automate as much of the installation and configuration as possible with sane defaults.
+This is an automated media server set up in docker containers via docker-compose. This goal of this setup is to automate as much of the installation and configuration as possible.
 
 The end result of this setup is a media server with the following components
 - `plex`
@@ -21,6 +21,8 @@ The high-level steps for setup are as follows
 1. add libraries to `plex`
 
 Once these steps have been completed, it is possible to add a TV Show or Movie to `sonarr` / `radarr`, have it automatically download them when available, and then it will be automatically copied into your `plex` libraries. Post-installation, this should be a fully-automated media server (the exception to this is removing completed downloads).
+
+📓 This has only been tested on Ubuntu 18.04 LTS but it should work just fine on other linux distors. MacOS and Windows are unsupported. If you test it on MacOS or Windows and it works, let me know!
 
 ## Network
 Each service is available on its own ports:
@@ -75,13 +77,68 @@ Modify the `.env` file to specify the following configurations. Note that these 
 ```
 docker-compose up
 ```
+Append `-d` to run in detached mode. The first time you run it, it's probably a good idea to not run in attached mode so you can watch all of the logs for issues.
 
 ## Configuration
 #### Configure Jackett
 `<server-ip>:9117`
+- Add an Indexer
+  - Click `+ Add Indexer`
+  - Search for your desired tracker
+  - Click on the 🔧icon next to your desired tracker
+  - Sign in with your account information
+  - Click `Okay`
+- You should see `Successfully configured IPTorrents` and a new entry for your tracker.
+- Copy the `API Key` from the top right corner and save it somewhere
+- Click the `Copy Torznab Feed` and paste it somewhere to save it
 
 #### Configure Sonarr
 `<server-ip>:8989`
+- Add an Indexer
+  - Click on the `Settings` button at the top
+  - Click on the `Indexers` tab
+  - Click the big `+` symbol
+  - Click the `Custom` button in the `Torznab` section
+  - Configure your `Torznab` feed
+    - `Name` : the name of this indexer (doesn't matter, just name it the name of your tracker)
+    - `URL` : the `Copy Torznab Feed` url from `Jackett` that you saved earlier
+      - I would suggest replacing the IP with `localhost`
+        - http://localhost:9117/api/v2.0/indexers/<indexer>/results/torznab/ instead of 
+        - http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/
+    - `API Key` : the `API Key` from `Jackett` that you saved earlier
+  - Click `Test` to verify that it is configured properly
+  - Click `Save`
+  
+- Add a Download Client
+  - Click on the `Settings` button at the top
+  - Click on the `Download Client` tab
+  - Under `Completed Download Handling` toggle `Enable` from Yes to No
+    - We'll be using `filebot` to handle our completed downloads
+  - Click the `Save` button at the top right
+  - Click the large `+` button
+  - Click on `qBittorrent`
+  - Configure your Download Client
+    - `Name` : whatever you want; probably `qBittorrent`
+    - `Host` : `localhost`
+    - `Port` : `8080`
+    - `Username` : `admin` or whatever you have set for `QBIT_WEBUI_USER` in your `.env` file
+    - `Password` : `adminadmin` or whatever you have set for `QBIT_WEBUI_PASS` in your `.env` file
+  - Click `Test` to verify that it is configured properly
+  - Click `Save`
+  
+- Add Some TV Shows
+  - Click on the `Series` button at the top
+  - Click `+ Add Series`
+  - Start typing in the search bar. It will search automatically when you stop typing
+  - Configure the download path (you should only have to do this on the first show you add)
+    - Click the dropdown that says `Select Path`
+    - Click `Add a different path`
+    - Click on the 📁button on the right of the modal
+    - Click on `data` > `completed` > `tv`
+    - Click on `Ok`
+    - Click on the green ✔️that is now visible
+    - Click on the `+` sign
+- There are many other configuration options for `Sonarr` that are not covered here. `Sonarr`'s webpage is [here](https://sonarr.tv/)
 
 #### Configure Radarr
 `<server-ip>:7878`
@@ -124,7 +181,7 @@ Most of these containers are config wrappers around [LinuxServer.io][linuxserver
 [filebotforumurl]: https://www.filebot.net/forums/
 [filebotpurchaseurl]: https://www.filebot.net/purchase.html
 
-This would also not be possible without filebot. This is currently using the free linux version `4.7.7` for now, but this may update to use the paid `4.8.2` in the future. If it does so, there will be a separate tag to stay on `4.7.7`, but it will likely become unsupported.
+This would also not be possible without filebot. This is currently using the free linux version `4.7.7`, but this may change to use the paid `4.8.2` version in the future. If it does so, there will be a separate tag to stay on `4.7.7`, but it will likely become unsupported.
 
 * [Filebot][fileboturl]
 * [Forum][filebotforumurl]

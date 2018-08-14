@@ -1,4 +1,16 @@
 # Automated Media Server 👻
+```
+         _               _
+    __ _| |__   ___  ___| |_
+   / _` | '_ \ / _ \/ __| __/
+  | (_| | | | | (_) \__ \ |_
+   \__, |_|_|_|\___/|___/\__|
+   |___/      /   _ \
+          (¯\| o (@) |/¯)
+           \_  .___.  _/
+            /   !_!   \
+           /_.--._.--._\
+```
 ---
 # About 
 This is an automated media server set up in docker containers via docker-compose. This goal of this setup is to automate as much of the installation and configuration as possible.
@@ -82,18 +94,26 @@ Append `-d` to run in detached mode. The first time you run it, it's probably a 
 # Configuration
 ### Configure Jackett
 `<server-ip>:9117`
+
+`Jackett` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `Jackett` already.
+
 - Add an Indexer
   - Click `+ Add Indexer`
   - Search for your desired tracker
   - Click on the 🔧icon next to your desired tracker
   - Sign in with your account information
   - Click `Okay`
-- You should see `Successfully configured IPTorrents` and a new entry for your tracker.
+- You should see `Successfully configured IPTorrents` and a new entry for your tracker
 - Copy the `API Key` from the top right corner and save it somewhere
-- Click the `Copy Torznab Feed` and paste it somewhere to save it
+- Click the `Copy Torznab Feed` on the tracker you just added and paste it somewhere to save it
 
 ### Configure Sonarr
 `<server-ip>:8989`
+
+`Sonarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `Sonarr` already. Do make sure that your download path is set to `/data/completed/tv` as that is the directory that the container has permissions to.
+
+Step-by-step for those who need it
+
 - Add an Indexer
   - Click on the `Settings` button at the top
   - Click on the `Indexers` tab
@@ -133,19 +153,75 @@ Append `-d` to run in detached mode. The first time you run it, it's probably a 
   - Configure the download path (you should only have to do this on the first show you add)
     - Click the dropdown that says `Select Path`
     - Click `Add a different path`
-    - Click on the 📁button on the right of the modal
-    - Click on `data` > `completed` > `tv`
-    - Click on `Ok`
-    - Click on the green ✔️that is now visible
-    - Click on the `+` sign
+    - Click the 📁button on the right of the modal
+    - Click `data` > `completed` > `tv`
+    - Click `Ok`
+    - Click the green ✔️that is now visible
+    - Click the `+` sign
 - There are many other configuration options for `Sonarr` that are not covered here. `Sonarr`'s webpage is [here](https://sonarr.tv/)
 
 ### Configure Radarr
 `<server-ip>:7878`
 
+`Radarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `Radarr` already. Do make sure that your download path is set to `/data/completed/movies` as that is the directory that the container has permissions to.
+
+Step-by-step for those who need it
+
+- Add an Indexer
+  - Click on the `Settings` button at the top
+  - Click on the `Indexers` tab
+  - Click the big `+` symbol
+  - Click the `Custom` button in the `Torznab` section
+  - Configure your `Torznab` feed
+    - `Name` : the name of this indexer (doesn't matter, just name it the name of your tracker)
+    - `URL` : the `Copy Torznab Feed` url from `Jackett` that you saved earlier
+      - I would suggest replacing the IP with `localhost`
+        - http://localhost:9117/api/v2.0/indexers/<indexer>/results/torznab/ instead of 
+        - http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/
+    - `API Key` : the `API Key` from `Jackett` that you saved earlier
+  - Click `Test` to verify that it is configured properly
+  - Click `Save`
+  
+- Add a Download Client
+  - Click on the `Settings` button at the top
+  - Click on the `Download Client` tab
+  - Under `Completed Download Handling` toggle `Enable` from Yes to No
+    - We'll be using `filebot` to handle our completed downloads
+  - Click the `Save` button at the top right
+  - Click the large `+` button
+  - Click on `qBittorrent`
+  - Configure your Download Client
+    - `Name` : whatever you want; probably `qBittorrent`
+    - `Host` : `localhost`
+    - `Port` : `8080`
+    - `Username` : `admin` or whatever you have set for `QBIT_WEBUI_USER` in your `.env` file
+    - `Password` : `adminadmin` or whatever you have set for `QBIT_WEBUI_PASS` in your `.env` file
+  - Click `Test` to verify that it is configured properly
+  - Click `Save`
+  
+- Add Some Movies
+  - Click on the `Add Movies` button at the top
+  - Start typing in the search bar. It will search automatically when you stop typing
+  - Configure the download path (you should only have to do this on the first movie you add)
+    - Click the dropdown that says `Select Path`
+    - Click `Add a different path`
+    - Click the 📁button on the right of the modal
+    - Click `data` > `completed` > `movies`
+    - Click `Ok`
+    - Click the green ✔️that is now visible
+    - Click the `+` sign
+- There are many other configuration options for `Radarr` that are not covered here. `Radarr`'s webpage is [here](https://radarr.video/)
+
 ### Configure qBittorrent
 `<server-ip>:8080`
-- This is mostly already configured. It automatically has configuration for `filebot` download completion handling, the username / password you set in your `.env`, and sets your download directory to `/downloads/`. If you want other `.env` configurations to be available for `qBittorrent`, open an issue here.
+
+qBittorrent should already be configured. It automatically has configuration for the following:
+
+- `filebot` download completion handling
+- the username / password you set in your `.env`
+- download directory set to `/downloads/`
+
+If you want other `.env` configurations to be available for `qBittorrent`, open an issue here.
 
 ### Configure Plex
 `<server-ip>:32400/web`
@@ -186,3 +262,6 @@ This would also not be possible without filebot. This is currently using the fre
 * [Filebot][fileboturl]
 * [Forum][filebotforumurl]
 * [Purchase][filebotpurchaseurl]
+
+### patorjk
+Thanks to patorjk for his [ascii text generator](http://patorjk.com/software/taag/#p=display&f=Ogre&t=ghost)

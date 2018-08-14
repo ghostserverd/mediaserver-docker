@@ -19,7 +19,7 @@ The end result of this setup is a media server with the following components
 - `plex`
 - `qBittorrent`
   - with `filebot` binary
-  - auto-configured to run `filebot` on torrent completion
+  - configured to run `filebot` on torrent completion
 - `sonarr`
 - `radarr`
 - `jackett`
@@ -95,7 +95,7 @@ Append `-d` to run in detached mode. The first time you run it, it's probably a 
 ## Configure Jackett
 `<server-ip>:9117`
 
-`Jackett` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `Jackett` already.
+`jackett` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `jackett` already.
 
 - Add an Indexer
   - Click `+ Add Indexer`
@@ -110,7 +110,7 @@ Append `-d` to run in detached mode. The first time you run it, it's probably a 
 ## Configure Sonarr
 `<server-ip>:8989`
 
-`Sonarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `Sonarr` already. Do make sure that your download path is set to `/data/completed/tv` as that is the directory that the container has permissions to.
+`sonarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `sonarr` already. Do make sure that your download path is set to `/data/completed/tv` as that is the directory that the container has permissions to.
 
 Step-by-step for those who need it
 
@@ -125,7 +125,7 @@ Step-by-step for those who need it
       - I would suggest replacing the IP with `localhost`
         - http://localhost:9117/api/v2.0/indexers/<indexer>/results/torznab/ instead of 
         - http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/
-    - `API Key` : the `API Key` from `Jackett` that you saved earlier
+    - `API Key` : the `API Key` from `jackett` that you saved earlier
   - Click `Test` to verify that it is configured properly
   - Click `Save`
   
@@ -158,12 +158,12 @@ Step-by-step for those who need it
     - Click `Ok`
     - Click the green ✔️that is now visible
     - Click the `+` sign
-- There are many other configuration options for `Sonarr` that are not covered here. `Sonarr`'s webpage is [here](https://sonarr.tv/)
+- There are many other configuration options for `sonarr` that are not covered here. `sonarr`'s webpage is [here](https://sonarr.tv/)
 
 ## Configure Radarr
 `<server-ip>:7878`
 
-`Radarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `Radarr` already. Do make sure that your download path is set to `/data/completed/movies` as that is the directory that the container has permissions to.
+`radarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `radarr` already. Do make sure that your download path is set to `/data/completed/movies` as that is the directory that the container has permissions to.
 
 Step-by-step for those who need it
 
@@ -210,12 +210,12 @@ Step-by-step for those who need it
     - Click `Ok`
     - Click the green ✔️that is now visible
     - Click the `+` sign
-- There are many other configuration options for `Radarr` that are not covered here. `Radarr`'s webpage is [here](https://radarr.video/)
+- There are many other configuration options for `radarr` that are not covered here. `radarr`'s webpage is [here](https://radarr.video/)
 
 ## Configure qBittorrent
 `<server-ip>:8080`
 
-qBittorrent should already be configured. It automatically has configuration for the following:
+`qBittorrent` should already be configured. It automatically has configuration for the following:
 
 - `filebot` download completion handling
 - the username / password you set in your `.env`
@@ -265,3 +265,11 @@ This would also not be possible without filebot. This is currently using the fre
 
 ## patorjk
 Thanks to patorjk for his [ascii text generator](http://patorjk.com/software/taag/#p=display&f=Ogre&t=ghost)
+
+# Future Plans
+* Auto-configuration for linking `radarr` and `sonarr` to `qBittorrent`
+* Auto-configuration for `plex` libraries
+* Additional containers (`tautulli`, `muximux`)
+* Upgrade `filebot` to `4.8.2` and make it easy to license
+* Improve documentation (maybe blog post with pictures)
+* Support additional `qBittorrent` configurations

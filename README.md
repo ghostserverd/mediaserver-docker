@@ -41,7 +41,7 @@ Each service is available on its own ports:
 
 | Service | Port |
 | ------- | ---- |
-| qBittorrent | 8080 |
+| qBittorrent | 6767 |
 | sonarr | 8989 |
 | radarr | 7878 |
 | jackett | 9117 |
@@ -49,7 +49,12 @@ Each service is available on its own ports:
 
 📓To reach `plex`, append `/web` to the address e.g. `192.168.1.11:32400/web`
 
-The services are all running in `network=host` mode so they can see each other without having to do extra port mapping.
+All of the services except for `plex` are running in the default docker-compose network. From within services, they can access each other via their `<service_name>:<port>` as defined in `docker-compose.yml`.
+
+`qbittorrent:6767`
+`sonarr:8989`
+`radarr:7878`
+`jackett:9117`
 
 # Installation
 ## Install Docker
@@ -115,7 +120,10 @@ Append `-d` to run in detached mode. The first time you run it, it is probably a
 ## Configure Sonarr
 `<server-ip>:8989`
 
-`sonarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `sonarr` already. Do make sure that your download path is set to `/data/completed/tv` as that is the directory that the container has permissions to.
+`sonarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `sonarr` already.
+
+⚠️ Do make sure that your download path is set to `/data/completed/tv` as that is the directory that the container has permissions to.
+⚠️ It is also critical that you use `qbittorrent` instead of the IP address when configuring the download client, as well as `jackett` instead of the IP when setting up your indexer. This is because this uses docker-compose networking which means each service is accessible at the name of the service, rather than the host IP address.
 
 Step-by-step for those who need it
 
@@ -126,9 +134,9 @@ Step-by-step for those who need it
   - Click the `Custom` button in the `Torznab` section
   - Configure your `Torznab` feed
     - `Name` : the name of this indexer (doesn't matter, just name it the name of your tracker)
-    - `URL` : the `Copy Torznab Feed` url from `Jackett` that you saved earlier
-      - I would suggest replacing the IP with `localhost`
-        - http://localhost:9117/api/v2.0/indexers/<indexer>/results/torznab/ instead of 
+    - `URL` : the `Copy Torznab Feed` url from `jackett` that you saved earlier
+      - ⚠️ It is necessary to replace the IP with `jackett`
+        - http://jackett:9117/api/v2.0/indexers/<indexer>/results/torznab/ instead of 
         - http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/
     - `API Key` : the `API Key` from `jackett` that you saved earlier
   - Click `Test` to verify that it is configured properly
@@ -144,8 +152,8 @@ Step-by-step for those who need it
   - Click on `qBittorrent`
   - Configure your Download Client
     - `Name` : whatever you want; probably `qBittorrent`
-    - `Host` : `localhost`
-    - `Port` : `8080`
+    - `Host` : `qbittorrent`
+    - `Port` : `6767`
     - `Username` : `admin` or whatever you have set for `QBIT_WEBUI_USER` in your `.env` file
     - `Password` : `adminadmin` or whatever you have set for `QBIT_WEBUI_PASS` in your `.env` file
   - Click `Test` to verify that it is configured properly
@@ -168,7 +176,10 @@ Step-by-step for those who need it
 ## Configure Radarr
 `<server-ip>:7878`
 
-`radarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `radarr` already. Do make sure that your download path is set to `/data/completed/movies` as that is the directory that the container has permissions to.
+`radarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `radarr` already.
+
+⚠️ Do make sure that your download path is set to `/data/completed/movies` as that is the directory that the container has permissions to.
+⚠️ It is also critical that you use `qbittorrent` instead of the IP address when configuring the download client, as well as `jackett` instead of the IP when setting up your indexer. This is because this uses docker-compose networking which means each service is accessible at the name of the service, rather than the host IP address.
 
 Step-by-step for those who need it
 
@@ -179,9 +190,9 @@ Step-by-step for those who need it
   - Click the `Custom` button in the `Torznab` section
   - Configure your `Torznab` feed
     - `Name` : the name of this indexer (doesn't matter, just name it the name of your tracker)
-    - `URL` : the `Copy Torznab Feed` url from `Jackett` that you saved earlier
-      - I would suggest replacing the IP with `localhost`
-        - http://localhost:9117/api/v2.0/indexers/<indexer>/results/torznab/ instead of 
+    - `URL` : the `Copy Torznab Feed` url from `jackett` that you saved earlier
+      - ⚠️ It is necessary to replace the IP with `jackett`
+        - http://jackett:9117/api/v2.0/indexers/<indexer>/results/torznab/ instead of 
         - http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/
     - `API Key` : the `API Key` from `Jackett` that you saved earlier
   - Click `Test` to verify that it is configured properly
@@ -197,8 +208,8 @@ Step-by-step for those who need it
   - Click on `qBittorrent`
   - Configure your Download Client
     - `Name` : whatever you want; probably `qBittorrent`
-    - `Host` : `localhost`
-    - `Port` : `8080`
+    - `Host` : `qbittorrent`
+    - `Port` : `6767`
     - `Username` : `admin` or whatever you have set for `QBIT_WEBUI_USER` in your `.env` file
     - `Password` : `adminadmin` or whatever you have set for `QBIT_WEBUI_PASS` in your `.env` file
   - Click `Test` to verify that it is configured properly
@@ -218,7 +229,7 @@ Step-by-step for those who need it
 - There are many other configuration options for `radarr` that are not covered here. `radarr`'s webpage is [here](https://radarr.video/)
 
 ## Configure qBittorrent
-`<server-ip>:8080`
+`<server-ip>:6767`
 
 `qBittorrent` should already be configured. It automatically has configuration for the following:
 
@@ -274,7 +285,7 @@ Thanks to patorjk for his [ascii text generator](http://patorjk.com/software/taa
 # Future Plans
 * Auto-configuration for linking `radarr` and `sonarr` to `qBittorrent`
 * Auto-configuration for `plex` libraries
-* Additional containers (`tautulli`, `muximux`)
+* Additional containers (`tautulli`, `muximux`, `portainer`)
 * Upgrade `filebot` to `4.8.2` and make it easy to license
 * Improve documentation (maybe blog post with pictures)
 * Support additional `qBittorrent` configurations

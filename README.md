@@ -159,7 +159,7 @@ Step-by-step for those who need it
   - Configure your Download Client
     - `Name` : whatever you want; probably `qBittorrent`
     - `Host` : `qbittorrent`
-    - `Port` : `6767`
+    - `Port` : `6767` or whatever you have set for `QBIT_WEBUI_PORT` in your `.env` file
     - `Username` : `admin` or whatever you have set for `QBIT_WEBUI_USER` in your `.env` file
     - `Password` : `adminadmin` or whatever you have set for `QBIT_WEBUI_PASS` in your `.env` file
   - Click `Test` to verify that it is configured properly
@@ -216,7 +216,7 @@ Step-by-step for those who need it
   - Configure your Download Client
     - `Name` : whatever you want; probably `qBittorrent`
     - `Host` : `qbittorrent`
-    - `Port` : `6767`
+    - `Port` : `6767` or whatever you have set for `QBIT_WEBUI_PORT` in your `.env` file
     - `Username` : `admin` or whatever you have set for `QBIT_WEBUI_USER` in your `.env` file
     - `Password` : `adminadmin` or whatever you have set for `QBIT_WEBUI_PASS` in your `.env` file
   - Click `Test` to verify that it is configured properly

@@ -41,7 +41,7 @@ Each service is available on its own ports:
 
 | Service | Port |
 | ------- | ---- |
-| qBittorrent | 6767 |
+| qbittorrent | 6767 |
 | sonarr | 8989 |
 | radarr | 7878 |
 | jackett | 9117 |

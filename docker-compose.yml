@@ -19,13 +19,13 @@ services:
     ports:
       - "6881:6881"
       - "6881:6881/udp"
-      - "8080:8080"
-    network_mode: host
+      - "${QBIT_WEBUI_PORT}:${QBIT_WEBUI_PORT}"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - QBIT_WEBUI_USER=${QBIT_WEBUI_USER}
       - QBIT_WEBUI_PASS=${QBIT_WEBUI_PASS}
+      - WEBUI_PORT=${QBIT_WEBUI_PORT}
       - TZ=America/Los_Angeles
     volumes:
       - ${CONFIG_DIR}/qbittorrent:/config
@@ -38,7 +38,6 @@ services:
     restart: always
     ports:
       - "8989:8989"
-    network_mode: host
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -54,7 +53,6 @@ services:
     restart: always
     ports:
       - "7878:7878"
-    network_mode: host
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -70,7 +68,6 @@ services:
     restart: always
     ports:
       - "9117:9117"
-    network_mode: host
     environment:
       - PUID=${PUID}
       - PGID=${PGID}

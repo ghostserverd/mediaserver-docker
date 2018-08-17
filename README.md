@@ -52,8 +52,11 @@ Each service is available on its own ports:
 All of the services except for `plex` are running in the default docker-compose network. From within services, they can access each other via their `<service_name>:<port>` as defined in `docker-compose.yml`.
 
 `qbittorrent:6767`
+
 `sonarr:8989`
+
 `radarr:7878`
+
 `jackett:9117`
 
 # Installation
@@ -125,6 +128,7 @@ Append `-d` to run in detached mode. The first time you run it, it is probably a
 `sonarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `sonarr` already.
 
 ⚠️ Do make sure that your download path is set to `/data/completed/tv` as that is the directory that the container has permissions to.
+
 ⚠️ It is also critical that you use `qbittorrent` instead of the IP address when configuring the download client, as well as `jackett` instead of the IP when setting up your indexer. This is because this uses docker-compose networking which means each service is accessible at the name of the service, rather than the host IP address.
 
 Step-by-step for those who need it
@@ -181,6 +185,7 @@ Step-by-step for those who need it
 `radarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `radarr` already.
 
 ⚠️ Do make sure that your download path is set to `/data/completed/movies` as that is the directory that the container has permissions to.
+
 ⚠️ It is also critical that you use `qbittorrent` instead of the IP address when configuring the download client, as well as `jackett` instead of the IP when setting up your indexer. This is because this uses docker-compose networking which means each service is accessible at the name of the service, rather than the host IP address.
 
 Step-by-step for those who need it

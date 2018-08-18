@@ -13,7 +13,7 @@
 ```
 ---
 # About 
-This is an automated media server set up in docker containers via docker-compose. This goal of this setup is to automate as much of the installation and configuration as possible.
+This is an automated media server set up in docker containers via docker-compose. This goal of this project is to automate as much of the installation and configuration as possible.
 
 The end result of this setup is a media server with the following components
 - `plex`

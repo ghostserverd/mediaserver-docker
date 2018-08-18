@@ -142,8 +142,8 @@ Step-by-step for those who need it
     - `Name` : the name of this indexer (doesn't matter, just name it the name of your tracker)
     - `URL` : the `Copy Torznab Feed` url from `jackett` that you saved earlier
       - ⚠️ It is necessary to replace the IP with `jackett`
-        - http://jackett:9117/api/v2.0/indexers/<indexer>/results/torznab/ instead of 
-        - http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/
+        - `http://jackett:9117/api/v2.0/indexers/<indexer>/results/torznab/` instead of 
+        - `http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/`
     - `API Key` : the `API Key` from `jackett` that you saved earlier
   - Click `Test` to verify that it is configured properly
   - Click `Save`
@@ -199,8 +199,8 @@ Step-by-step for those who need it
     - `Name` : the name of this indexer (doesn't matter, just name it the name of your tracker)
     - `URL` : the `Copy Torznab Feed` url from `jackett` that you saved earlier
       - ⚠️ It is necessary to replace the IP with `jackett`
-        - http://jackett:9117/api/v2.0/indexers/<indexer>/results/torznab/ instead of 
-        - http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/
+        - `http://jackett:9117/api/v2.0/indexers/<indexer>/results/torznab/` instead of 
+        - `http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/`
     - `API Key` : the `API Key` from `Jackett` that you saved earlier
   - Click `Test` to verify that it is configured properly
   - Click `Save`

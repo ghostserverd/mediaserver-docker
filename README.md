@@ -173,7 +173,7 @@ Step-by-step for those who need it
     - Click the dropdown that says `Select Path`
     - Click `Add a different path`
     - Click the 📁button on the right of the modal
-    - Click `data` > `completed` > `tv`
+    - Click `tv` # final path should be `/tv/`
     - Click `Ok`
     - Click the green ✔️that is now visible
     - Click the `+` sign
@@ -229,7 +229,7 @@ Step-by-step for those who need it
     - Click the dropdown that says `Select Path`
     - Click `Add a different path`
     - Click the 📁button on the right of the modal
-    - Click `data` > `completed` > `movies`
+    - Click `movies` # final path should be `/movies/`
     - Click `Ok`
     - Click the green ✔️that is now visible
     - Click the `+` sign

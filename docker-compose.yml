@@ -103,6 +103,13 @@ services:
       - ${CONFIG_DIR}/plex:/config
       - ${MEDIA_DIR}:/data
 
+  acestream:
+    image: ikatson/aceproxy
+    container_name: acestream
+    restart: always
+    ports:
+      - "9191:8000"
+
   watchtower:
     image: v2tec/watchtower
     container_name: watchtower

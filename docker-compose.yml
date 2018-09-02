@@ -17,8 +17,8 @@ services:
     container_name: qbittorrent
     restart: always
     ports:
-      - "6881:6881"
-      - "6881:6881/udp"
+      - "${QBIT_CONNECTION_PORT}:${QBIT_CONNECTION_PORT}"
+      - "${QBIT_CONNECTION_PORT}:${QBIT_CONNECTION_PORT}/udp"
       - "${QBIT_WEBUI_PORT}:${QBIT_WEBUI_PORT}"
     environment:
       - PUID=${PUID}

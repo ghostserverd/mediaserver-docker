@@ -26,6 +26,7 @@ services:
       - QBIT_WEBUI_USER=${QBIT_WEBUI_USER}
       - QBIT_WEBUI_PASS=${QBIT_WEBUI_PASS}
       - WEBUI_PORT=${QBIT_WEBUI_PORT}
+      - QBIT_CONNECTION_PORT=${QBIT_CONNECTION_PORT}
       - TZ=America/Los_Angeles
     volumes:
       - ${CONFIG_DIR}/qbittorrent:/config

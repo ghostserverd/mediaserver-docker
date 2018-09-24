@@ -102,6 +102,9 @@ services:
     volumes:
       - ${CONFIG_DIR}/plex:/config
       - ${MEDIA_DIR}:/data
+    devices:
+      - "/dev/dri/card0:/dev/dri/card0"
+      - "/dev/dri/renderD128:/dev/dri/renderD128"
 
   acestream:
     image: ikatson/aceproxy

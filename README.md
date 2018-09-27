@@ -20,6 +20,9 @@ The end result of this setup is a media server with the following components
 - `qBittorrent`
   - with `filebot` binary
   - configured to run `filebot` on torrent completion
+- `transmission`
+  - with `filebot` binary
+  - configured to run `filebot` on torrent completion
 - `sonarr`
 - `radarr`
 - `jackett`
@@ -29,7 +32,7 @@ The high-level steps for setup are as follows
 1. `docker-compose up`
 1. add an indexer to `jackett`
 1. configure `sonarr` / `radarr` to use the `jackett` indexer
-1. configure `sonarr` / `radarr` to use `qbittorrent` as their download client
+1. configure `sonarr` / `radarr` to use `qbittorrent` or `transmission` as their download client
 1. add libraries to `plex`
 
 Once these steps have been completed, it is possible to add a TV Show or Movie to `sonarr` / `radarr`, have it automatically download them when available, and then it will be automatically copied into your `plex` libraries. Post-installation, this should be a fully-automated media server (the exception to this is removing completed downloads).
@@ -42,6 +45,7 @@ Each service is available on its own ports:
 | Service | Port |
 | ------- | ---- |
 | qbittorrent | 6767 |
+| transmission | 5656 |
 | sonarr | 8989 |
 | radarr | 7878 |
 | jackett | 9117 |
@@ -50,6 +54,8 @@ Each service is available on its own ports:
 📓To reach `plex`, append `/web` to the address e.g. `192.168.1.11:32400/web`
 
 All of the services except for `plex` are running in the default docker-compose network. From within services, they can access each other via their `<service_name>:<port>` as defined in `docker-compose.yml`.
+
+`transmission:5656`
 
 `qbittorrent:6767`
 
@@ -95,6 +101,12 @@ Modify the `.env` file to specify the following configurations. Note that these 
 - `QBIT_WEBUI_PASS` is the Web UI password for `qBittorrent`. The default is `adminadmin`.
 
 - `QBIT_WEBUI_PORT` is the Web UI port for `qBittorrent`. The default is `6767`. ⚠️ This configuration is required.
+
+- `TRANS_WEBUI_USER` is the Web UI user for `transmission`. The default is `admin`.
+
+- `TRANS_WEBUI_PASS` is the Web UI password for `transmission`. The default is `adminadmin`.
+
+- `TRANS_WEBUI_PORT` is the Web UI port for `transmission`. The default is `6767`. ⚠️ This configuration is required.
 
 - `PUID` is the unix `UID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine.
 

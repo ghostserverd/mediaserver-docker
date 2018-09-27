@@ -39,6 +39,11 @@ Once these steps have been completed, it is possible to add a TV Show or Movie t
 
 📓 This has only been tested on Ubuntu 18.04 LTS but it should work just fine on other linux distros. MacOS and Windows are unsupported. If you test it on MacOS or Windows and it works, let me know!
 
+# ⚠️ A Note About Torrent Clients
+Before we begin, it has been observed in the past few weeks that ratios on new torrents (mostly TV shows) have been much lower than usual since switching to `qbittorrent`. Towards isolating the issue, `transmission` has been added as an option for torrent client. The `.env_sample` has been updated to reflect new config options, and the `docker-compose.yml` file has a new section in it for `transmission`. It is currently commented out, with `qbittorrent` being left as the default for now. Once more testing has been performed, `qbittorrent` may be replaced alltogether with `transmission`.
+
+For now, if you wish to continue using `qbittorrent`, nothing needs to be changed in your setup. If you wish to switch to `transmission`, modify the `docker-compose.yml` file to uncomment the `transmission` service block, and comment out the `qbittorrent` block. You will have to modify your configuration in `sonarr` to point to `transmission` instead of `qbittorrent`, but you should be able to follow the same basic pattern in this README.
+
 # Network
 Each service is available on its own ports:
 
@@ -96,17 +101,21 @@ Modify the `.env` file to specify the following configurations. Note that these 
 
 - `MOVIES_DIR` is where your TV shows will be placed by `filebot` on download completion. It should be a subdirectory of `MEDIA_DIR`
 
-- `QBIT_WEBUI_USER` is the Web UI user for `qBittorrent`. The default is `admin`.
+- `QBIT_WEBUI_USER` is the Web UI user for `qbittorrent`. The default is `admin`.
 
-- `QBIT_WEBUI_PASS` is the Web UI password for `qBittorrent`. The default is `adminadmin`.
+- `QBIT_WEBUI_PASS` is the Web UI password for `qbittorrent`. The default is `adminadmin`.
 
-- `QBIT_WEBUI_PORT` is the Web UI port for `qBittorrent`. The default is `6767`. ⚠️ This configuration is required.
+- `QBIT_WEBUI_PORT` is the Web UI port for `qbittorrent`. The default is `6767`. ⚠️ This configuration is required.
+
+- `QBIT_CONNECTION_PORT` is the connection port for `qbittorrent`. The default is `6881`. ⚠️ This configuration is required.
 
 - `TRANS_WEBUI_USER` is the Web UI user for `transmission`. The default is `admin`.
 
 - `TRANS_WEBUI_PASS` is the Web UI password for `transmission`. The default is `adminadmin`.
 
 - `TRANS_WEBUI_PORT` is the Web UI port for `transmission`. The default is `6767`. ⚠️ This configuration is required.
+
+- `TRANS_CONNECTION_PORT` is the connection port for `transmission`. The default is `51413`. ⚠️ This configuration is required.
 
 - `PUID` is the unix `UID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine.
 

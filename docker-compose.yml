@@ -12,24 +12,43 @@
 version: "2"
 
 services:
-  qbittorrent:
-    image: ghostserverd/qbittorrent-filebot
-    container_name: qbittorrent
+        #  qbittorrent:
+          #    image: ghostserverd/qbittorrent-filebot
+          #    container_name: qbittorrent
+          #    restart: always
+          #    ports:
+          #      - "${QBIT_CONNECTION_PORT}:${QBIT_CONNECTION_PORT}"
+          #      - "${QBIT_CONNECTION_PORT}:${QBIT_CONNECTION_PORT}/udp"
+          #      - "${QBIT_WEBUI_PORT}:${QBIT_WEBUI_PORT}"
+          #    environment:
+          #      - PUID=${PUID}
+          #      - PGID=${PGID}
+          #      - QBIT_WEBUI_USER=${QBIT_WEBUI_USER}
+          #      - QBIT_WEBUI_PASS=${QBIT_WEBUI_PASS}
+          #      - WEBUI_PORT=${QBIT_WEBUI_PORT}
+          #      - QBIT_CONNECTION_PORT=${QBIT_CONNECTION_PORT}
+          #      - TZ=America/Los_Angeles
+          #    volumes:
+          #      - ${CONFIG_DIR}/qbittorrent:/config
+          #      - ${DOWNLOAD_DIR}:/downloads
+          #      - ${MEDIA_DIR}:/media
+
+  transmission:
+    image: ghostserverd/transmission-filebot
+    container_name: transmission
     restart: always
     ports:
-      - "${QBIT_CONNECTION_PORT}:${QBIT_CONNECTION_PORT}"
-      - "${QBIT_CONNECTION_PORT}:${QBIT_CONNECTION_PORT}/udp"
-      - "${QBIT_WEBUI_PORT}:${QBIT_WEBUI_PORT}"
+      - "${TRANS_WEBUI_PORT}:9091"
+      - "${TRANS_CONNECTION_PORT}:51413"
+      - "${TRANS_CONNECTION_PORT}:51413/udp"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - QBIT_WEBUI_USER=${QBIT_WEBUI_USER}
-      - QBIT_WEBUI_PASS=${QBIT_WEBUI_PASS}
-      - WEBUI_PORT=${QBIT_WEBUI_PORT}
-      - QBIT_CONNECTION_PORT=${QBIT_CONNECTION_PORT}
+      - TRANS_WEBUI_USER=${TRANS_WEBUI_USER}
+      - TRANS_WEBUI_PASS=${TRANS_WEBUI_PASS}
       - TZ=America/Los_Angeles
     volumes:
-      - ${CONFIG_DIR}/qbittorrent:/config
+      - ${CONFIG_DIR}/transmission:/config
       - ${DOWNLOAD_DIR}:/downloads
       - ${MEDIA_DIR}:/media
 

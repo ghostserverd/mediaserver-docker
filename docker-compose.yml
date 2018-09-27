@@ -38,9 +38,9 @@ services:
         #     container_name: transmission
         #     restart: always
         #     ports:
-        #       - "${TRANS_WEBUI_PORT}:9091"
-        #       - "${TRANS_CONNECTION_PORT}:51413"
-        #       - "${TRANS_CONNECTION_PORT}:51413/udp"
+        #       - "${TRANS_WEBUI_PORT}:${TRANS_WEBUI_PORT}"
+        #       - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}"
+        #       - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}/udp"
         #     environment:
         #       - PUID=${PUID}
         #       - PGID=${PGID}

@@ -23,6 +23,7 @@ The end result of this setup is a media server with the following components
 - `transmission`
   - with `filebot` binary
   - configured to run `filebot` on torrent completion
+  - with `combustion` web UI
 - `sonarr`
 - `radarr`
 - `jackett`
@@ -309,6 +310,13 @@ This would also not be possible without filebot. This is currently using the fre
 
 ## patorjk
 Thanks to patorjk for his [ascii text generator](http://patorjk.com/software/taag/#p=display&f=Ogre&t=ghost)
+
+[combustionurl]: https://secretmapper.github.io/combustion/
+
+## secretmapper
+Thanks to `secretmapper` for the `combustion` UI for `transmission`
+
+* [Combustion][combustionurl]
 
 # Future Plans
 * Auto-configuration for linking `radarr` and `sonarr` to `qBittorrent`

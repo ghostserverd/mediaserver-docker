@@ -112,7 +112,6 @@ services:
       - "32413:32413"
       - "32414:32414"
       - "32469:32469"
-    network_mode: host
     environment:
       - PUID=${PUID}
       - PGID=${PGID}

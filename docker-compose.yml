@@ -46,6 +46,8 @@ services:
         #       - PGID=${PGID}
         #       - TRANS_WEBUI_USER=${TRANS_WEBUI_USER}
         #       - TRANS_WEBUI_PASS=${TRANS_WEBUI_PASS}
+        #       - TRANS_MAX_RETENTION=${TRANS_MAX_RETENTION}
+        #       - TRANS_MAX_RATIO=${TRANS_MAX_RATIO}
         #       - TZ=America/Los_Angeles
         #     volumes:
         #       - ${CONFIG_DIR}/transmission:/config

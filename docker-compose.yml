@@ -137,6 +137,7 @@ services:
   watchtower:
     image: v2tec/watchtower
     container_name: watchtower
+    command: --cleanup
     restart: always
     network_mode: host
     volumes:

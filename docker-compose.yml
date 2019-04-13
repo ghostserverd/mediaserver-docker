@@ -34,7 +34,7 @@ services:
 #      - ${MEDIA_DIR}:/media
 
   transmission:
-    image: ghostserverd/transmission-filebot
+    image: ghostserverd/transmission-combustion
     container_name: transmission
     restart: always
     ports:

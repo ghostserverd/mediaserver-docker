@@ -55,6 +55,21 @@ services:
       - ${DOWNLOAD_DIR}:/downloads
       - ${MEDIA_DIR}:/media
 
+  filebot:
+    image: ghostserverd/filebot
+    container_name: filebot
+    restart: always
+    ports:
+      - "7676:7676"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/Los_Angeles
+    volumes:
+      - ${CONFIG_DIR}/filebot:/config
+      - ${DOWNLOAD_DIR}:/downloads
+      - ${MEDIA_DIR}:/media
+
   sonarr:
     image: ghostserverd/sonarr
     container_name: sonarr

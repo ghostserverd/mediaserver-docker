@@ -9,7 +9,7 @@
 #            /   !_!   \
 #           /_.--._.--._\
 
-version: "2"
+version: "3"
 
 services:
   transmission:

@@ -15,7 +15,7 @@ services:
   transmission:
     image: ghostserverd/transmission-combustion
     container_name: transmission
-    restart: always
+    restart: unless-stopped
     ports:
       - "${TRANS_WEBUI_PORT}:${TRANS_WEBUI_PORT}"
       - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}"
@@ -38,7 +38,7 @@ services:
   filebot:
     image: ghostserverd/filebot
     container_name: filebot
-    restart: always
+    restart: unless-stopped
     ports:
       - "7676:7676"
     environment:
@@ -54,7 +54,7 @@ services:
   sonarr:
     image: ghostserverd/sonarr
     container_name: sonarr
-    restart: always
+    restart: unless-stopped
     ports:
       - "8989:8989"
     environment:
@@ -69,7 +69,7 @@ services:
   radarr:
     image: ghostserverd/radarr
     container_name: radarr
-    restart: always
+    restart: unless-stopped
     ports:
       - "7878:7878"
     environment:
@@ -84,7 +84,7 @@ services:
   bazarr:
     image: linuxserver/bazarr
     container_name: bazarr
-    restart: always
+    restart: unless-stopped
     ports:
       - "6767:6767"
     environment:
@@ -99,7 +99,7 @@ services:
   jackett:
     image: linuxserver/jackett
     container_name: jackett
-    restart: always
+    restart: unless-stopped
     ports:
       - "9117:9117"
     environment:
@@ -114,7 +114,7 @@ services:
   plex:
     image: ghostserverd/plex
     container_name: plex
-    restart: always
+    restart: unless-stopped
     ports:
       - "32400:32400"
       - "1900:1900"
@@ -141,7 +141,7 @@ services:
   acestream:
     image: ikatson/aceproxy
     container_name: acestream
-    restart: always
+    restart: unless-stopped
     ports:
       - "9191:8000"
 
@@ -149,7 +149,7 @@ services:
     image: v2tec/watchtower
     container_name: watchtower
     command: --cleanup
-    restart: always
+    restart: unless-stopped
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

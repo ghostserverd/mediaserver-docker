@@ -28,6 +28,7 @@ services:
       - TRANS_MAX_RETENTION=${TRANS_MAX_RETENTION}
       - TRANS_MAX_RATIO=${TRANS_MAX_RATIO}
       - TRANS_CONNECTION_PORT=${TRANS_CONNECTION_PORT}
+      - FILEBOT_PORT=${FILEBOT_PORT}
       - TZ=America/Los_Angeles
     volumes:
       - ${CONFIG_DIR}/transmission:/config
@@ -44,6 +45,7 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=America/Los_Angeles
+      - FILEBOT_PORT=${FILEBOT_PORT}
     volumes:
       - ${CONFIG_DIR}/filebot:/config
       - ${DOWNLOAD_DIR}:/downloads

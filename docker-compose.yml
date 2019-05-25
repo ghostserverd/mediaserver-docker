@@ -25,6 +25,7 @@ services:
       - PGID=${PGID}
       - TRANS_WEBUI_USER=${TRANS_WEBUI_USER}
       - TRANS_WEBUI_PASS=${TRANS_WEBUI_PASS}
+      - TRANS_WEBUI_PORT=${TRANS_WEBUI_PORT}
       - TRANS_MAX_RETENTION=${TRANS_MAX_RETENTION}
       - TRANS_MAX_RATIO=${TRANS_MAX_RATIO}
       - TRANS_CONNECTION_PORT=${TRANS_CONNECTION_PORT}
@@ -50,6 +51,21 @@ services:
       - ${CONFIG_DIR}/filebot:/config
       - ${DOWNLOAD_DIR}:/downloads
       - ${MEDIA_DIR}:/media
+
+  nzbget:
+    image: ghostserverd/nzbget
+    container_name: nzbget
+    restart: unless-stopped
+    ports:
+      - "6789:6789"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - FILEBOT_PORT=${FILEBOT_PORT}
+      - TZ=America/Los_Angeles
+    volumes:
+      - ${CONFIG_DIR}/nzbget:/config
+      - ${DOWNLOAD_DIR}/nzb:/downloads/nzb
 
   sonarr:
     image: ghostserverd/sonarr
@@ -138,12 +154,36 @@ services:
       - "/dev/dri/card0:/dev/dri/card0"
       - "/dev/dri/renderD128:/dev/dri/renderD128"
 
+  tautulli:
+    image: linuxserver/tautulli
+    container_name: tautulli
+    restart: unless-stopped
+    ports:
+      - "8181:8181"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/Los_Angeles
+    volumes:
+      - ${CONFIG_DIR}/tautulli:/config
+      - "${CONFIG_DIR}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
+
   acestream:
     image: ikatson/aceproxy
     container_name: acestream
     restart: unless-stopped
     ports:
       - "9191:8000"
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${CONFIG_DIR}/portainer:/data
 
   watchtower:
     image: v2tec/watchtower

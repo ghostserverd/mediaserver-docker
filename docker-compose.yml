@@ -15,11 +15,11 @@ services:
   transmission:
     image: ghostserverd/transmission-combustion
     container_name: transmission
-    restart: unless-stopped
+    restart: always
     ports:
-      - "${TRANS_WEBUI_PORT}:${TRANS_WEBUI_PORT}"
-      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}"
-      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}/udp"
+      - "${TRANS_WEBUI_PORT}:5656"
+      - "${TRANS_CONNECTION_PORT}:51413"
+      - "${TRANS_CONNECTION_PORT}:51413/udp"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -30,7 +30,7 @@ services:
       - TRANS_MAX_RATIO=${TRANS_MAX_RATIO}
       - TRANS_CONNECTION_PORT=${TRANS_CONNECTION_PORT}
       - FILEBOT_PORT=${FILEBOT_PORT}
-      - TZ=America/Los_Angeles
+      - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/transmission:/config
       - ${DOWNLOAD_DIR}:/downloads
@@ -39,14 +39,14 @@ services:
   filebot:
     image: ghostserverd/filebot
     container_name: filebot
-    restart: unless-stopped
+    restart: always
     ports:
-      - "7676:7676"
+      - "${FILEBOT_PORT}:7676"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - TZ=America/Los_Angeles
       - FILEBOT_PORT=${FILEBOT_PORT}
+      - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/filebot:/config
       - ${DOWNLOAD_DIR}:/downloads
@@ -55,14 +55,14 @@ services:
   nzbget:
     image: ghostserverd/nzbget
     container_name: nzbget
-    restart: unless-stopped
+    restart: always
     ports:
-      - "6789:6789"
+      - "${NZBGET_PORT}:6789"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - FILEBOT_PORT=${FILEBOT_PORT}
-      - TZ=America/Los_Angeles
+      - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/nzbget:/config
       - ${DOWNLOAD_DIR}/nzb:/downloads/nzb
@@ -70,13 +70,13 @@ services:
   sonarr:
     image: ghostserverd/sonarr
     container_name: sonarr
-    restart: unless-stopped
+    restart: always
     ports:
-      - "8989:8989"
+      - "${SONARR_PORT}:8989"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - TZ=America/Los_Angeles
+      - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/sonarr:/config
       - ${DOWNLOAD_DIR}:/data/completed/tv/
@@ -85,13 +85,13 @@ services:
   radarr:
     image: ghostserverd/radarr
     container_name: radarr
-    restart: unless-stopped
+    restart: always
     ports:
-      - "7878:7878"
+      - "${RADARR_PORT}:7878"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - TZ=America/Los_Angeles
+      - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/radarr:/config
       - ${DOWNLOAD_DIR}:/data/completed/movies/
@@ -100,13 +100,13 @@ services:
   bazarr:
     image: linuxserver/bazarr
     container_name: bazarr
-    restart: unless-stopped
+    restart: always
     ports:
-      - "6767:6767"
+      - "${BAZARR_PORT}:6767"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - TZ=America/Los_Angeles
+      - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/bazarr:/config
       - ${TV_DIR}:/tv
@@ -115,14 +115,14 @@ services:
   jackett:
     image: linuxserver/jackett
     container_name: jackett
-    restart: unless-stopped
+    restart: always
     ports:
-      - "9117:9117"
+      - "${JACKETT_PORT}:9117"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - TZ=America/Los_Angeles
       - JACKETT_KEY=0000
+      - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/jackett:/config
       - ${CONFIG_DIR}/jackett/downloads:/downloads
@@ -130,9 +130,9 @@ services:
   plex:
     image: ghostserverd/plex
     container_name: plex
-    restart: unless-stopped
+    restart: always
     ports:
-      - "32400:32400"
+      - "${PLEX_WEB_PORT}:32400"
       - "1900:1900"
       - "3005:3005"
       - "5353:5353"
@@ -145,8 +145,8 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - TZ=America/Los_Angeles
       - VERSION=latest
+      - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/plex:/config
       - ${MEDIA_DIR}:/data
@@ -157,13 +157,13 @@ services:
   tautulli:
     image: linuxserver/tautulli
     container_name: tautulli
-    restart: unless-stopped
+    restart: always
     ports:
-      - "8181:8181"
+      - "${TAUTULLI_PORT}:8181"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - TZ=America/Los_Angeles
+      - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/tautulli:/config
       - "${CONFIG_DIR}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
@@ -171,25 +171,80 @@ services:
   acestream:
     image: ikatson/aceproxy
     container_name: acestream
-    restart: unless-stopped
+    restart: always
     ports:
-      - "9191:8000"
+      - "${ACESTREAM_PORT}:8000"
+
+  letsencrypt:
+    image: linuxserver/letsencrypt
+    container_name: letsencrypt
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ${CONFIG_DIR}/letsencrypt:/config
+    restart: always
+    depends_on:
+      - sonarr
+      - radarr
+      - nzbget
+      - transmission
+      - plex
+      - tautulli
+      - netdata
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - EMAIL=${LE_EMAIL}
+      - URL=${LE_HOSTNAME}
+      - SUBDOMAINS=${LE_SUBDOMAINS}
+      - TZ=${TIMEZONE}
+
+  ddclient:
+    image: linuxserver/ddclient
+    container_name: ddclient
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${CONFIG_DIR}/ddclient:/config
+    restart: always
 
   portainer:
     image: portainer/portainer
     container_name: portainer
-    restart: unless-stopped
+    restart: always
     ports:
-      - "9000:9000"
+      - "${PORTAINER_PORT}:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${CONFIG_DIR}/portainer:/data
+
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: ${LE_HOSTNAME}
+    ports:
+      - "${NETDATA_PORT}:19999"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
 
   watchtower:
     image: v2tec/watchtower
     container_name: watchtower
     command: --cleanup
-    restart: unless-stopped
+    restart: always
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

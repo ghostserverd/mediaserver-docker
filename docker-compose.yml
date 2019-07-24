@@ -41,11 +41,12 @@ services:
     container_name: filebot
     restart: always
     ports:
-      - "${FILEBOT_PORT}:7676"
+      - "${FILEBOT_PORT}:${FILEBOT_PORT}"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - FILEBOT_PORT=${FILEBOT_PORT}
+      - FILEBOT_FORMAT=${FILEBOT_FORMAT}
       - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/filebot:/config

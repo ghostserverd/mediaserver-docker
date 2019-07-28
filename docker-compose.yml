@@ -176,6 +176,25 @@ services:
     ports:
       - "${ACESTREAM_PORT}:8000"
 
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: ${LE_HOSTNAME}
+    ports:
+      - "${NETDATA_PORT}:19999"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+
   heimdall:
     image: linuxserver/heimdall
     container_name: heimdall
@@ -238,25 +257,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${CONFIG_DIR}/portainer:/data
-
-  netdata:
-    image: netdata/netdata
-    container_name: netdata
-    hostname: ${LE_HOSTNAME}
-    ports:
-      - "${NETDATA_PORT}:19999"
-    cap_add:
-      - SYS_PTRACE
-    security_opt:
-      - apparmor:unconfined
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TIMEZONE}
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /var/run/docker.sock:/var/run/docker.sock:rw
 
   watchtower:
     image: v2tec/watchtower

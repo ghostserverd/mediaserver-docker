@@ -191,7 +191,7 @@ services:
       - ${CONFIG_DIR}/heimdall:/config
 
   letsencrypt:
-    image: linuxserver/letsencrypt
+    image: ghostserverd/letsencrypt
     container_name: letsencrypt
     ports:
       - "443:443"

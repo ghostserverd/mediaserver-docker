@@ -176,6 +176,20 @@ services:
     ports:
       - "${ACESTREAM_PORT}:8000"
 
+  heimdall:
+    image: linuxserver/heimdall
+    container_name: heimdall
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    ports:
+      - "${HEIMDALL_PORT}:80"
+      - "${HEIMDALL_SSL_PORT}:443"
+    volumes:
+      - ${CONFIG_DIR}/heimdall:/config
+
   letsencrypt:
     image: linuxserver/letsencrypt
     container_name: letsencrypt

@@ -214,6 +214,8 @@ services:
       - EMAIL=${LE_EMAIL}
       - URL=${LE_HOSTNAME}
       - SUBDOMAINS=${LE_SUBDOMAINS}
+      - NGINX_USER=${NGINX_USER}
+      - NGINX_PASS=${NGINX_PASS}
       - TZ=${TIMEZONE}
 
   ddclient:

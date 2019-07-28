@@ -207,6 +207,7 @@ services:
       - plex
       - tautulli
       - netdata
+      - heimdall
     environment:
       - PUID=${PUID}
       - PGID=${PGID}

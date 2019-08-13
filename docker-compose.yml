@@ -47,6 +47,8 @@ services:
       - PGID=${PGID}
       - FILEBOT_PORT=${FILEBOT_PORT}
       - FILEBOT_FORMAT=${FILEBOT_FORMAT}
+      - FILEBOT_ACTION=${FILEBOT_ACTION}
+      - FILEBOT_CONFLICT=${FILEBOT_CONFLICT}
       - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/filebot:/config

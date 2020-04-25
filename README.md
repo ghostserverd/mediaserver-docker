@@ -13,7 +13,7 @@
 ```
 ---
 # About
-This is an automated media server set up in docker containers via docker-compose. The goal of this project is to automate as much of the installation and configuration as possible.
+This is an automated media server set up in docker containers via docker-compose. The goal of this project is to automate as much of the installation and configuration as possible while maintaining simplicity of the setup (no ansible playbooks or fancy bash scripts) to avoid making it a complete black box.
 
 The end result of this setup is a media server with the following components
 - `plex`
@@ -30,17 +30,20 @@ The end result of this setup is a media server with the following components
 - `bazarr`
 - `tautulli`
   - configured to look at plex server logs
-- `acestream`
-  - for proxying acestream streams to formats VLC or other media players can handle
 - `portainer`
 - `watchtower`
+- `nginx + letsencrypt`
+  - for reverse proxying to reach your services at \*.domain.tld
+- `heimdall`
 
 The high-level steps for setup are as follows
 1. Install docker and docker-compose
 1. `docker-compose up`
 1. add an indexer to `jackett`
 1. configure `sonarr` / `radarr` to use the `jackett` indexer
+1. configure `sonarr` / `radarr` to use an `nzb` indexer
 1. configure `sonarr` / `radarr` to use `transmission` as their download client
+1. configure `sonarr` / `radarr` to use `nzbget` as their nzb client
 1. configure `nzbget` with your newsgroup provider
 1. add libraries to `plex`
 
@@ -64,24 +67,27 @@ Each service is available on its own ports:
 | bazarr | 6767 |
 | jackett | 9117 |
 | plex | 32400 |
-| acestream | 9191 |
 | portainer | 9000 |
+| heimdall | 8888 |
+| netdata | 19999 |
 
 📓To reach `plex`, append `/web` to the address e.g. `192.168.1.11:32400/web`
 
-All of the services except for `plex` are running in the default docker-compose network. From within services, they can access each other via their `<service_name>:<port>` as defined in `docker-compose.yml`.
+All of the services are running in the default docker-compose network. From within services, they can access each other via their `<service_name>:<port>` as defined in `docker-compose.yml`. These are _NOT_ the ports you've configured in your `.env` file. Those ports are mapped to the host device's network, but the services are operating within the network that docker-compose sets up, so they will not respect the rules forwarding ports to the host network.
 
-`transmission:5656`
-
-`nzbget:6789`
-
-`filebot:7676`
-
-`sonarr:8989`
-
-`radarr:7878`
-
-`jackett:9117`
+| Service | Port |
+| ------- | ---- |
+| transmission | 5656 |
+| nzbget | 6789 |
+| filebot | 7676 |
+| sonarr | 8989 |
+| radarr | 7878 |
+| bazarr | 6767 |
+| jackett | 9117 |
+| plex | 32400 |
+| tautulli | 8181 |
+| heimdall | 80 |
+| netdata | 19999 |
 
 # Installation
 ## Install Docker
@@ -102,40 +108,62 @@ cp .env_sample .env
 id $USER # save the result of this for building your .env file below
 ```
 
-Modify the `.env` file to specify the following configurations. Note that these directories are for the host machine. They are mapped to various locations inside of their container by the `docker-compose` file.
+Modify the `.env` file to specify the directory configurations. Note that these directories are for the host machine. They are mapped to various locations inside of their container by the `docker-compose` file.
 
-- `CONFIG_DIR` is where configuration for each of the services will live. You'll end up with multiple directories in here, one for each service. If you move this directory to a different volume with a different instance of the whole media server, it should retain your various configurations.
+The `.env_sample` file has some notes about the various configuration options. There are additional descriptions of each service's configuration below.
 
-- `DOWNLOAD_DIR` is where various services will download files to. ⚠️ This should not be on a small partition as it will contain media files.
+### Directories
+A good directory setup looks something like this
 
-- `MEDIA_DIR` is where your media will be copied to. ⚠️ This should not be on a small partition as it will contain media files.
+```
+CONFIG_DIR=/some/directory/media_server/config
+DOWNLOAD_DIR=/some/directory/media_server/downloads
+MEDIA_DIR=/some/directory/media_server/media
+TV_DIR=/some/directory/media_server/media/TV Shows
+MOVIES_DIR=/some/directory/media_server/media/Movies
+BASE_DIR=/some/directory/media_server
+```
 
-- `TV_DIR` is where your TV shows will be placed by `filebot` on download completion. It should be a subdirectory of `MEDIA_DIR`
+Note that there is a base directory that holds both `media` and `downloads`
 
-- `MOVIES_DIR` is where your TV shows will be placed by `filebot` on download completion. It should be a subdirectory of `MEDIA_DIR`
+```
+/some/directory/media_server
+```
 
-- `TRANS_WEBUI_USER` is the Web UI user for `transmission`. The default is `admin`.
+Configuring a base directory with `downloads` and `media` present allows `filebot` to take advantage of `hardlinks` when renaming and moving files. Hardlinks are much quicker than actually copying the file, but they require that the source and destination be on the same device which is what the base directory accomplishes.
 
-- `TRANS_WEBUI_PASS` is the Web UI password for `transmission`. The default is `adminadmin`.
+| variable | description |
+| ------- | ---- |
+| CONFIG_DIR | where configuration for each of the services will live. You'll end up with multiple directories in here, one for each service. If you move this directory to a different volume with a different instance of the whole media server, it should retain your various configurations. |
+| DOWNLOAD_DIR | where various services will download files to. ⚠️ This should not be on a small partition as it will contain media files. |
+| MEDIA_DIR | where your media will be copied to. ⚠️ This should not be on a small partition as it will contain media files. |
+| TV_DIR | where your TV shows will be placed by `filebot` on download completion. It should be a subdirectory of `MEDIA_DIR` |
+| MOVIES_DIR | where your TV shows will be placed by `filebot` on download completion. It should be a subdirectory of `MEDIA_DIR` |
+| BASE_DIR | a shared directory that houses `media` and `downloads` directories to be used for hardlinks |
 
-- `TRANS_WEBUI_PORT` is the Web UI port for `transmission`. The default is `6767`. ⚠️ This configuration is required.
+### PUID and PGID
 
-- `TRANS_CONNECTION_PORT` is the connection port for `transmission`. The default is `51413`. ⚠️ This configuration is required.
+| variable | description |
+| ------- | ---- |
+| PUID | the unix `UID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine. |
+| PGID | is the unix `GID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine. |
 
-- `PUID` is the unix `UID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine.
+## Deploy the mediaserver
 
-- `PGID` is the unix `GID` that will be passed to the various services. It can be discovered by running `id $USER` on the host machine.
+Fill out the rest of the configuration options before deploying. See each individual service's section for configuration details.
 
-- `FILEBOT_PORT` is the port that the `filebot` container is listening on, and it needs to match your port configuration in `docker-compose.yml`. This is how containers like `transmission` and `nzbget` know what port to find `filebot` on.
-
-## Deploy the service
 ```
 docker-compose up
 ```
-Append `-d` to run in detached mode. The first time you run it, it is probably a good idea to not run in dettached mode (i.e. DON'T append `-d`) so you can watch all of the logs for issues.
+Append `-d` to run in detached mode. The first time you run a service, it is probably a good idea to not run in dettached mode (i.e. DON'T append `-d`) so you can watch all of the logs for issues.
 
 # Configuration
 ## Configure Jackett
+
+| variable | description |
+| ------- | ---- |
+| JACKETT_PORT | the port that jacket will listen on |
+
 `<server-ip>:9117`
 
 `jackett` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `jackett` already.
@@ -146,18 +174,23 @@ Append `-d` to run in detached mode. The first time you run it, it is probably a
   - Click on the 🔧icon next to your desired tracker
   - Sign in with your account information
   - Click `Okay`
-- You should see `Successfully configured IPTorrents` and a new entry for your tracker
+- You should see `Successfully configured <tracker>` and a new entry for your tracker
 - Copy the `API Key` from the top right corner and save it somewhere
 - Click the `Copy Torznab Feed` on the tracker you just added and paste it somewhere to save it
 
 ## Configure Sonarr
+
+| variable | description |
+| ------- | ---- |
+| SONARR_PORT | the port that sonarr will listen on |
+
 `<server-ip>:8989`
 
 `sonarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `sonarr` already.
 
 ⚠️ Do make sure that your download path is set to `/data/completed/tv` as that is the directory that the container has permissions to.
 
-⚠️ It is also critical that you use `qbittorrent` instead of the IP address when configuring the download client, as well as `jackett` instead of the IP when setting up your indexer. This is because this uses docker-compose networking which means each service is accessible at the name of the service, rather than the host IP address.
+⚠️ It is also critical that you use `transmission` instead of the IP address when configuring the download client, as well as `jackett` instead of the IP when setting up your indexer. This is because this uses docker-compose networking which means each service is accessible at the name of the service, rather than the host or even local IP address.
 
 Step-by-step for those who need it
 
@@ -208,6 +241,11 @@ Step-by-step for those who need it
 - There are many other configuration options for `sonarr` that are not covered here. `sonarr`'s webpage is [here](https://sonarr.tv/)
 
 ## Configure Radarr
+
+| variable | description |
+| ------- | ---- |
+| RADARR_PORT | the port that radarr will listen on |
+
 `<server-ip>:7878`
 
 `radarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `radarr` already.
@@ -263,18 +301,67 @@ Step-by-step for those who need it
     - Click the `+` sign
 - There are many other configuration options for `radarr` that are not covered here. `radarr`'s webpage is [here](https://radarr.video/)
 
-## Configure qBittorrent
-`<server-ip>:6767`
+## Configure filebot
 
-`qBittorrent` should already be configured. It automatically has configuration for the following:
+`<server-ip>:7676`
 
-- `filebot` download completion handling
-- the username / password you set in your `.env`
-- download directory set to `/downloads/`
+| variable | description |
+| ------- | ---- |
+| FILEBOT_PORT | the web interface port for the filebot container |
+| FILEBOT_FORMAT | the filebot [format expression](https://www.filebot.net/naming.html) to use |
+| FILEBOT_ACTION | the [action](https://www.filebot.net/forums/viewtopic.php?t=4915) for filebot to take when renaming files |
+| FILEBOT_CONFLICT | what filebot does when it sees a conflicting filename |
+| FILEBOT_SERIES_DB | the database to use for TV metadata lookup |
+| FILEBOT_ANIME_DB | the database to use for anime metadata lookup |
+| FILEBOT_MOVIE_DB | the database to use for movie metadata lookup |
+| FILEBOT_MUSIC_DB | the database to use for music metadata lookup |
+| OPEN_SUB_USER | the opensubtitles username for filebot to use when downloading subtitles [NOT FUNCTIONAL] |
+| OPEN_SUB_PASS | the opensubtitles password for filebot to use when downloading subtitles [NOT FUNCTIONAL] |
 
-If you want other `.env` configurations to be available for `qBittorrent`, open an issue here.
+The opensubtitles configuration is called by the container startup script, but opensubtitles still fails when filebot is actually run. Until I figure out how to make this work, stick to `bazarr`.
+
+You can navigate to `<server-ip>:7676` to see the filebot command that will be run when a download is completed. Do NOT expose this port to the internet as it is not password protected.
+
+These are the `filebot` CLI options: https://www.filebot.net/cli.html. If there are additional options you want to be able to configure, open an issue.
+
+⚠️ This has been updated to use the `4.9.x` version of `filebot` by default. In order to properly register after you have purchased a license, copy your `license.psm` file to the filebot config directory on your host machine. The container will automatically register `filebot` with that license.
+
+## Configure transmission
+
+| variable | description |
+| ------- | ---- |
+| TRANS_WEBUI_USER | the username with which to log into transmission |
+| TRANS_WEBUI_PASS | the password with which to log into transmission |
+| TRANS_WEBUI_PORT | the port for transmission's web interface |
+| TRANS_CONNECTION_PORT | the connection port for tranmission to use |
+| TRANS_MAX_RETENTION | the time in seconds before a torrent is automatically removed |
+| TRANS_MAX_RATIO | the ratio at which a torrent is automatically removed |
+
+`<server-ip>:5656`
+
+It should not be necessary to configure transmission beyond the default configuration. The container writes a config with reasonable defaults. If you need access to additional transmission settings, feel free to open an issue.
+
+The container is already automatically configured to call `filebot` to post-process a download.
+
+## Configure nzbget
+
+`<server-ip:7890`
+
+| variable | description |
+| ------- | ---- |
+| NZBGET_PORT | the web interface port for nzbget |
+
+The container is already automatically configured to call `filebot` to post-process a download.
+
+See [the documentation](https://nzbget.net/documentation) for instructions on setting up `nzbget`.
 
 ## Configure Plex
+
+| variable | description |
+| ------- | ---- |
+| PLUGIN_LIST | a list of plugins to install. supported plugins are `trakt` and `subzero`. leave empty to install no plugins |
+| PLEX_WEB_PORT | the port for the plex web interface |
+
 `<server-ip>:32400/web`
 - Add some libraries
   - TV Shows will be at `/data/TV Shows` assuming you followed the `/media/TV Shows` convention for `TV_DIR`
@@ -284,9 +371,47 @@ If you want other `.env` configurations to be available for `qBittorrent`, open 
   - To get around this, uncheck `Local Media Assets` for all Agents under `Settings` > `Server` > `Agents`. Artwork will be downloaded by plex and accessible.
 - Kill and restart the containers after logging in to Plex if you have Plexpass
 ```
-docker-compose down
-docker-compose up
+docker stop plex
+docker-compose up -d plex
 ```
+
+## Reverse proxy / letsencrypt
+
+The compose file includes a letsencrypt container which you can use to set up a reverse proxy to various services which will automatically provision an SSL certificate for you to use. If you do not want to use a reverse proxy, simply delete that entry from the compose file.
+
+I recommend that you launch the full mediaserver once without the reverse proxy enabled so you can set up authentication for `sonarr`, `radarr`, `bazarr`, `nzbget`, `tautulli`, `netdata`, and `heimdall`
+
+The reverse proxy is configured to use subdomain routing by default. It copies in appropriate configurations for each service with these names
+
+| service | config name |
+| ------- | ---- |
+| sonarr | s.subdomain.conf |
+| radarr | r.subdomain.conf |
+| transmission | t.subdomain.conf |
+| nzbget | n.subdomain.conf |
+| plex | p.subdomain.conf |
+| tautulli | u.subdomain.conf |
+| netdata | m.subdomain.conf |
+| heimdall | h.subdomain.conf |
+| bazarr | b.subdomain.conf |
+
+Config files for each subdomain will be present in the `config` directory on your host machine if you wish to change the configurations. The directory is `config/letsencrypt/nginx/proxy-confs`. If you wish to use different subdomains (e.g. `plex.domain.tld` instead of `p.domain.tld`) you need to change the configuration for the subdomain in that directory, and update the `LE_SUBDOMAINS` to include the new subdomain.
+
+Note that the first time you run the letsencrypt container, it can take some time for it to register an SSL cert.
+
+| variable | description |
+| ------- | ---- |
+| LE_HOSTNAME | the hostname you are using to host the reverse proxy |
+| LE_EMAIL | the email for which your letsencrypt SSL cert will be registered |
+| LE_SUBDOMAINS | the subdomains for which to register the SSL cert |
+
+## VPN networks for transmission, nzbget, and others
+
+I have built a wireguard container following the principles described [here](https://nbsoftsolutions.com/blog/routing-select-docker-containers-through-wireguard-vpn) and have successfully tested using docker-compose to force all traffic for `transmission` through the wireguard VPN using a config from http://mullvad.net/.
+
+I will upload a separate docker-compose file showing how to set this up. The container is not currently set up to use `s6` like the rest of the containers are, and I would consider it still in beta as I have not done extensive testing with it beyond downloading a few torrents. I am not currently using it myself because I prefer private trackers and high speeds.
+
+Note that this works best with the reverse proxy set up for transmission and whatever other container you want to proxy traffic through the VPN container, because when you assign a container to another container's network, it is no longer accessible outside of localhost and the container overlay network.
 
 # Thank You
 ## Linuxserver
@@ -296,7 +421,7 @@ docker-compose up
 [podcasturl]: https://www.linuxserver.io/podcast/
 [linuxserverdonate]: https://www.linuxserver.io/donate/
 
-Most of these containers are config wrappers around [LinuxServer.io][linuxserverurl] containers. Without their amazing linuxserver containers, none of this would have been possible. If you find this automated media server useful, go donate to them!
+Most of these containers are config wrappers around [LinuxServer.io][linuxserverurl] containers. Without their amazing linuxserver containers, none of this would have been possible. If you find this automated media server useful, go donate to them! They probably deserve it more than I do.
 
 * [forum.linuxserver.io][linuxserverforumurl]
 * [IRC][ircurl] on freenode at `#linuxserver.io`
@@ -314,22 +439,29 @@ This would also not be possible without filebot. This is currently using the fre
 * [Forum][filebotforumurl]
 * [Purchase][filebotpurchaseurl]
 
-## patorjk
+## ASCII word generation
 Thanks to patorjk for his [ascii text generator](http://patorjk.com/software/taag/#p=display&f=Ogre&t=ghost)
 
 [combustionurl]: https://secretmapper.github.io/combustion/
 
-## secretmapper
+## conbustion UI for transmission
 Thanks to `secretmapper` for the `combustion` UI for `transmission`
 
 * [Combustion][combustionurl]
 
+## Donate
+If you really want to donate to me, you can do that here
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=Y8B6ES2LDJ2N8&currency_code=USD&source=url)
+
 # Future Plans
+* Wireguard as a network container for downloaders
+* Consider switching from `nginx` to `traefik`
 * Auto-configuration for linking `radarr` and `sonarr` to `transmission`
 * Auto-configuration for linking `radarr` and `sonarr` to `nzbget`
 * Better configuration options for `nzbget`
 * Auto-configuration for `plex` libraries
-* Additional containers (~~`tautulli`~~, `muximux`, ~~`portainer`~~)
-* Add reverse proxy support (`traefik`?)
-* Upgrade `filebot` to `4.8.2` and make it easy to license
 * Improve documentation (maybe blog post with pictures)
+* ~~Additional containers (`tautulli`, `muximux`, `portainer`)~~
+* ~~Add reverse proxy support (`traefik`?)~~
+* ~~Upgrade `filebot` to `4.8.2` and make it easy to license~~

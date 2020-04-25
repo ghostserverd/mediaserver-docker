@@ -1,3 +1,19 @@
+- [About](#about)
+- [Network](#network)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  * [Configure Jackett](#configure-jackett)
+  * [Configure Sonarr](#configure-sonarr)
+  * [Configure Radarr](#configure-radarr)
+  * [Configure filebot](#configure-filebot)
+  * [Configure transmission](#configure-transmission)
+  * [Configure nzbget](#configure-nzbget)
+  * [Configure Plex](#configure-plex)
+  * [Reverse proxy / letsencrypt](#reverse-proxy--letsencrypt)
+  * [VPN networks for transmission, nzbget, and others](#vpn-networks-for-transmission-nzbget-and-others)
+- [Thank You](#thank-you)
+- [Future Plans](#future-plans)
+
 # Automated Media Server 👻
 ```
          _               _

@@ -23,6 +23,7 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
+      - TZ=${TIMEZONE}
       - TRANS_WEBUI_USER=${TRANS_WEBUI_USER}
       - TRANS_WEBUI_PASS=${TRANS_WEBUI_PASS}
       - TRANS_WEBUI_PORT=${TRANS_WEBUI_PORT}
@@ -30,14 +31,13 @@ services:
       - TRANS_MAX_RATIO=${TRANS_MAX_RATIO}
       - TRANS_CONNECTION_PORT=${TRANS_CONNECTION_PORT}
       - FILEBOT_PORT=${FILEBOT_PORT}
-      - TZ=${TIMEZONE}
     volumes:
       - ${CONFIG_DIR}/transmission:/config
       - ${DOWNLOAD_DIR}:/downloads
       - ${MEDIA_DIR}:/media
 
   filebot:
-    image: ghostserverd/filebot
+    image: ghostserverd/filebot:4.9.x
     container_name: filebot
     restart: always
     ports:
@@ -45,15 +45,22 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
+      - TZ=${TIMEZONE}
       - FILEBOT_PORT=${FILEBOT_PORT}
       - FILEBOT_FORMAT=${FILEBOT_FORMAT}
       - FILEBOT_ACTION=${FILEBOT_ACTION}
       - FILEBOT_CONFLICT=${FILEBOT_CONFLICT}
-      - TZ=${TIMEZONE}
+      - FILEBOT_SERIES_DB=${FILEBOT_SERIES_DB}
+      - FILEBOT_ANIME_DB=${FILEBOT_ANIME_DB}
+      - FILEBOT_MOVIE_DB=${FILEBOT_MOVIE_DB}
+      - FILEBOT_MUSIC_DB=${FILEBOT_MUSIC_DB}
+      - OPEN_SUB_USER=${OPEN_SUB_USER}
+      - OPEN_SUB_PASS=${OPEN_SUB_PASS}
     volumes:
       - ${CONFIG_DIR}/filebot:/config
       - ${DOWNLOAD_DIR}:/downloads
       - ${MEDIA_DIR}:/media
+      - ${BASE_DIR}:/share
 
   nzbget:
     image: ghostserverd/nzbget
@@ -64,8 +71,8 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - FILEBOT_PORT=${FILEBOT_PORT}
       - TZ=${TIMEZONE}
+      - FILEBOT_PORT=${FILEBOT_PORT}
     volumes:
       - ${CONFIG_DIR}/nzbget:/config
       - ${DOWNLOAD_DIR}/nzb:/downloads/nzb
@@ -101,7 +108,7 @@ services:
       - ${MOVIES_DIR}:/movies
 
   bazarr:
-    image: linuxserver/bazarr
+    image: ghostserverd/bazarr
     container_name: bazarr
     restart: always
     ports:
@@ -116,7 +123,7 @@ services:
       - ${MOVIES_DIR}:/movies
 
   jackett:
-    image: linuxserver/jackett
+    image: ghostserverd/jackett
     container_name: jackett
     restart: always
     ports:
@@ -124,8 +131,8 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - JACKETT_KEY=0000
       - TZ=${TIMEZONE}
+      - JACKETT_KEY=0000
     volumes:
       - ${CONFIG_DIR}/jackett:/config
       - ${CONFIG_DIR}/jackett/downloads:/downloads
@@ -148,8 +155,9 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - VERSION=latest
       - TZ=${TIMEZONE}
+      - VERSION=latest
+      - PLUGIN_LIST=${PLUGIN_LIST}
     volumes:
       - ${CONFIG_DIR}/plex:/config
       - ${MEDIA_DIR}:/data
@@ -158,7 +166,7 @@ services:
       - "/dev/dri/renderD128:/dev/dri/renderD128"
 
   tautulli:
-    image: linuxserver/tautulli
+    image: ghostserverd/tautulli
     container_name: tautulli
     restart: always
     ports:
@@ -171,34 +179,8 @@ services:
       - ${CONFIG_DIR}/tautulli:/config
       - "${CONFIG_DIR}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
 
-  acestream:
-    image: ikatson/aceproxy
-    container_name: acestream
-    restart: always
-    ports:
-      - "${ACESTREAM_PORT}:8000"
-
-  netdata:
-    image: netdata/netdata
-    container_name: netdata
-    hostname: ${LE_HOSTNAME}
-    ports:
-      - "${NETDATA_PORT}:19999"
-    cap_add:
-      - SYS_PTRACE
-    security_opt:
-      - apparmor:unconfined
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TIMEZONE}
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /var/run/docker.sock:/var/run/docker.sock:rw
-
   heimdall:
-    image: linuxserver/heimdall
+    image: ghostserverd/heimdall
     container_name: heimdall
     restart: always
     environment:
@@ -232,12 +214,31 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
+      - TZ=${TIMEZONE}
       - EMAIL=${LE_EMAIL}
       - URL=${LE_HOSTNAME}
       - SUBDOMAINS=${LE_SUBDOMAINS}
       - NGINX_USER=${NGINX_USER}
       - NGINX_PASS=${NGINX_PASS}
+
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: ${LE_HOSTNAME}
+    ports:
+      - "${NETDATA_PORT}:19999"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TIMEZONE}
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
 
   ddclient:
     image: linuxserver/ddclient

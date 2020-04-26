@@ -12,6 +12,30 @@
 version: "3"
 
 services:
+#  wireguard:
+#    image: ghostserverd/wireguard
+#    container_name: wireguard
+#    restart: always
+#    privileged: true
+#    sysctls:
+#      - "net.ipv4.conf.all.rp_filter=2"
+#      - "net.ipv4.conf.default.rp_filter=2"
+#      - "net.ipv6.conf.all.disable_ipv6=0"
+#    cap_add:
+#      - net_admin
+#      - sys_module
+#    networks:
+#      default:
+#        # add aliases for any containers behind wireguard so they can be accessed at <container_name>:<port>
+#        aliases:
+#          - nzbget
+#    ports:
+#      # add any port mappings for containers behind wireguard
+#      - "${NZBGET_PORT}:6789"
+#    volumes:
+#      - /lib/modules:/lib/modules
+#      - /server/config/wireguard:/etc/wireguard
+
   transmission:
     image: ghostserverd/transmission-combustion
     container_name: transmission
@@ -61,6 +85,24 @@ services:
       - ${DOWNLOAD_DIR}:/downloads
       - ${MEDIA_DIR}:/media
       - ${BASE_DIR}:/share
+
+### this is how to define the nzbget service to send all traffic through the wireguard container
+### the difference is adding network_mode and removing any port mappings
+#  nzbget:
+#    image: ghostserverd/nzbget
+#    container_name: nzbget
+#    restart: always
+#    network_mode: "service:wireguard"
+#    depends_on:
+#      - wireguard
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TIMEZONE}
+#      - FILEBOT_PORT=${FILEBOT_PORT}
+#    volumes:
+#      - ${CONFIG_DIR}/nzbget:/config
+#      - ${DOWNLOAD_DIR}/nzb:/downloads/nzb
 
   nzbget:
     image: ghostserverd/nzbget

@@ -423,11 +423,35 @@ Note that the first time you run the letsencrypt container, it can take some tim
 
 ## VPN networks for transmission, nzbget, and others
 
-I have built a wireguard container following the principles described [here](https://nbsoftsolutions.com/blog/routing-select-docker-containers-through-wireguard-vpn) and have successfully tested using docker-compose to force all traffic for `transmission` through the wireguard VPN using a config from http://mullvad.net/.
+I have built a wireguard container following the principles described [here](https://nbsoftsolutions.com/blog/routing-select-docker-containers-through-wireguard-vpn) and have successfully tested using docker-compose to force all traffic for `nzbget` through the wireguard VPN using a config from http://mullvad.net/.
 
-I will upload a separate docker-compose file showing how to set this up. The container is not currently set up to use `s6` like the rest of the containers are, and I would consider it still in beta as I have not done extensive testing with it beyond downloading a few torrents. I am not currently using it myself because I prefer private trackers and high speeds.
+Download or build a wireguard config file from your VPN provider. For example, mullvad has a wireguard config generator at https://mullvad.net/en/download/wireguard-config/. Once you have the config file (e.g. mine is called `wgnet0.conf`, copy that file into your config/wireguard directory. The container will automatically find the config file and build the VPN network for you.
 
-Note that this works best with the reverse proxy set up for transmission and whatever other container you want to proxy traffic through the VPN container, because when you assign a container to another container's network, it is no longer accessible outside of localhost and the container overlay network.
+⚠️ Do NOT use your VPN's killswitch in the `wireguard` config file. This will disallow traffic from the docker network which will make it inaccessible from the reverse proxy container. There is a rudimentary killswitch implemented in the `wireguard` container already. I may improve this over time.
+
+`docker-compose.yml` has been updated with a commented out wireguard service. There is also a commented out `nzbget` service configured to use the wireguard container's network as an example. This will force `nzbget` to proxy all traffic through the `wireguard` container, and thus through the VPN. You can follow the same pattern with the `transmission` container, or even `sonarr` and `radarr` if you want all queries to torrent trackers to go through the VPN.
+
+To proxy an additional container through the `wireguard` container's network, add the service name (e.g. `transmission`) to the list of network aliases defined in the `wireguard` service.
+
+```
+    networks:
+      default:
+        aliases:
+          - nzbget
+          - transmission
+```
+
+Then update the new service's definition (e.g. `transmission`) to remove the port mapping list, and add
+
+```
+network_mode: "service:wireguard"
+depends_on:
+  - wireguard
+```
+
+Because the `wireguard` has an alias to `transmission`, it is now accessible on `transmission:5656` just like it was before. You will also want to add the port mapping from the original `transmission` container to the `wireguard` container.
+
+Note that this works best with the reverse proxy set up for `nzbget` and whatever other service you want to proxy traffic through the VPN container, because when you assign a container to another container's network, it is no longer accessible outside of localhost and the container overlay network. This means you can no longer reach the service at `<server-local-ip>:<service-port>` in your local network.
 
 # Thank You
 ## Linuxserver
@@ -449,7 +473,7 @@ Most of these containers are config wrappers around [LinuxServer.io][linuxserver
 [filebotforumurl]: https://www.filebot.net/forums/
 [filebotpurchaseurl]: https://www.filebot.net/purchase.html
 
-This would also not be possible without filebot. This is currently using the free linux version `4.7.7`, but this may change to use the paid `4.8.2` version in the future. If it does so, there will be a separate tag to stay on `4.7.7`, but it will likely become unsupported.
+This would also not be possible without filebot. This has been updated to use the latest `4.9.x` version of filebot. It supports automatic registration as long as you provide a license file.
 
 * [Filebot][fileboturl]
 * [Forum][filebotforumurl]
@@ -471,13 +495,13 @@ If you really want to donate to me, you can do that here
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=Y8B6ES2LDJ2N8&currency_code=USD&source=url)
 
 # Future Plans
-* Wireguard as a network container for downloaders
 * Consider switching from `nginx` to `traefik`
 * Auto-configuration for linking `radarr` and `sonarr` to `transmission`
 * Auto-configuration for linking `radarr` and `sonarr` to `nzbget`
 * Better configuration options for `nzbget`
 * Auto-configuration for `plex` libraries
 * Improve documentation (maybe blog post with pictures)
+* ~~Wireguard as a network container for downloaders~~
 * ~~Additional containers (`tautulli`, `muximux`, `portainer`)~~
 * ~~Add reverse proxy support (`traefik`?)~~
 * ~~Upgrade `filebot` to `4.8.2` and make it easy to license~~

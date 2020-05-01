@@ -32,6 +32,9 @@ services:
 #    ports:
 #      # add any port mappings for containers behind wireguard
 #      - "${NZBGET_PORT}:6789"
+#    environment:
+#      # the name of your wireguard network WITHOUT the .conf like wgnet0
+#      - WG_NET=${WG_NET}
 #    volumes:
 #      - /lib/modules:/lib/modules
 #      - /server/config/wireguard:/etc/wireguard

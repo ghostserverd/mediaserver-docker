@@ -451,7 +451,7 @@ depends_on:
 
 Because the `wireguard` has an alias to `transmission`, it is now accessible on `transmission:5656` just like it was before. You will also want to add the port mapping from the original `transmission` container to the `wireguard` container.
 
-Note that this works best with the reverse proxy set up for `nzbget` and whatever other service you want to proxy traffic through the VPN container, because when you assign a container to another container's network, it is no longer accessible outside of localhost and the container overlay network. This means you can no longer reach the service at `<server-local-ip>:<service-port>` in your local network.
+The `wireguard` container now has a proper route back to the local network over `eth0` so services that are using the `wireguard` network should now be accessible via your local subnet. You need to specify this subnet in the `LOCAL_NETWORK` environment variable. Thanks to [htilly](https://github.com/htilly/wireguard-docker) and [cmulk](https://github.com/cmulk/wireguard-docker) who's containers I shamelessly copied and modified. Once you have set up the route back to the local subnet, you can properly port foward through the VPN. See https://mullvad.net/en/help/port-forwarding-and-mullvad/ for details on port forwarding with `mullvad`.
 
 # Thank You
 ## Linuxserver

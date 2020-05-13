@@ -18,26 +18,28 @@ services:
 #    restart: always
 #    privileged: true
 #    sysctls:
-#      - "net.ipv4.conf.all.rp_filter=2"
-#      - "net.ipv4.conf.default.rp_filter=2"
 #      - "net.ipv6.conf.all.disable_ipv6=0"
+#      - "net.ipv6.conf.default.forwarding=1"
+#      - "net.ipv6.conf.all.forwarding=1"
+#      - "net.ipv4.ip_forward=1"
 #    cap_add:
-#      - net_admin
-#      - sys_module
+#      - NET_ADMIN
+#      - SYS_MODULE
 #    networks:
 #      default:
-#        # add aliases for any containers behind wireguard so they can be accessed at <container_name>:<port>
 #        aliases:
 #          - nzbget
+#          - transmission
 #    ports:
-#      # add any port mappings for containers behind wireguard
 #      - "${NZBGET_PORT}:6789"
+#      - "${TRANS_WEBUI_PORT}:${TRANS_WEBUI_PORT}"
+#      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}"
+#      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}/udp"
 #    environment:
-#      # the name of your wireguard network WITHOUT the .conf like wgnet0
-#      - WG_NET=${WG_NET}
+#      - LOCAL_NETWORK=${LOCAL_NETWORK}
 #    volumes:
 #      - /lib/modules:/lib/modules
-#      - /server/config/wireguard:/etc/wireguard
+#      - ${CONFIG_DIR}/wireguard:/etc/wireguard
 
   transmission:
     image: ghostserverd/transmission-combustion

@@ -449,9 +449,19 @@ depends_on:
   - wireguard
 ```
 
-Because the `wireguard` has an alias to `transmission`, it is now accessible on `transmission:5656` just like it was before. You will also want to add the port mapping from the original `transmission` container to the `wireguard` container.
+Because the `wireguard` has an alias to `transmission`, it is now accessible on `transmission:5656` just like it was before. You will also want to add the port mapping that were originally in the `transmission` service definition to the `wireguard` service definition.
 
 The `wireguard` container now has a proper route back to the local network over `eth0` so services that are using the `wireguard` network should now be accessible via your local subnet. You need to specify this subnet in the `LOCAL_NETWORK` environment variable. Thanks to [htilly](https://github.com/htilly/wireguard-docker) and [cmulk](https://github.com/cmulk/wireguard-docker) who's containers I shamelessly copied and modified. Once you have set up the route back to the local subnet, you can properly port foward through the VPN. See https://mullvad.net/en/help/port-forwarding-and-mullvad/ for details on port forwarding with `mullvad`.
+
+### Why do you need to mount `docker.sock` for the wireguard container?
+
+Mounting `docker.sock` is normally an anti-pattern for containers. However, when the `wireguard` container is started, `wg-quick` rewrites `/etc/resolv.conf` with the DNS address specified in the interface's `.conf` file. This breaks DNS resolution for docker services from within any container that is using the `wireguard` container as its network. In practice, this means that from within e.g. the `transmission` or `nzbget` containers, `curl filebot:7676` will fail DNS resolution. This breaks the auto-config between downlaoders and `filebot`.
+
+To work around this issue, the `wireguard` container now inspects the network (`docker network inspect mediaserver-docker_default`) and writes `/etc/hosts` entries for each service it finds in the network. This means that if one of your service IPs changes for any reason, you'll need to restart the `wireguard` container in order to be able to properly resolve DNS for docker services again.
+
+I believe it is possible to fix this issue using `dnsmasq` instead of writing `/etc/hosts` which would remove the requirement to read from `docker.sock`, but I have not been able to get it to work, so I'm leaving this hack in place for now.
+
+If you do not mount `docker.sock`, the `wireguard` container will still run, but any containers in the `wireguard` network will be unable to resolve DNS for other docker services. If that's fine with you, you don't need to mount `docker.sock`.
 
 # Thank You
 ## Linuxserver

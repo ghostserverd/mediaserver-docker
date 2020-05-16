@@ -33,13 +33,18 @@ services:
 #    ports:
 #      - "${NZBGET_PORT}:6789"
 #      - "${TRANS_WEBUI_PORT}:${TRANS_WEBUI_PORT}"
+#      # TRANS_CONNECTION_PORT may need to be port forwarded by your VPN
 #      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}"
 #      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}/udp"
 #    environment:
 #      - LOCAL_NETWORK=${LOCAL_NETWORK}
+#      # NETWORK_NAME is not needed if you're using the default docker-compose network
+#      - NETWORK_NAME=${NETWORK_NAME}
 #    volumes:
-#      - /lib/modules:/lib/modules
 #      - ${CONFIG_DIR}/wireguard:/etc/wireguard
+#      - /lib/modules:/lib/modules
+#      # this is needed to write /etc/hosts for non-wireguard service DNS resolution (e.g. filebot)
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
 
   transmission:
     image: ghostserverd/transmission-combustion

@@ -315,10 +315,9 @@ services:
       - ${CONFIG_DIR}/portainer:/data
 
   watchtower:
-    image: v2tec/watchtower
+    image: containrrr/watchtower
     container_name: watchtower
     command: --cleanup
     restart: always
-    network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

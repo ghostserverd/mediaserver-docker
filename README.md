@@ -463,6 +463,33 @@ I believe it is possible to fix this issue using `dnsmasq` instead of writing `/
 
 If you do not mount `docker.sock`, the `wireguard` container will still run, but any containers in the `wireguard` network will be unable to resolve DNS for other docker services. If that's fine with you, you don't need to mount `docker.sock`.
 
+#### Update: mounting `docker.sock` is no longer necessary
+
+The `wireguard` container has been updated to use `dnsmasq` to conditionally route DNS requests.
+
+The container also now scrapes the wireguard interface file for its DNS server and write /etc/dnsmasq.conf with that as the final fallback DNS address.
+
+There are now three options for enabling docker DNS resolution from within the wireguard container:
+
+1. If `docker.sock` is mounted, write `/etc/hosts` with any service in the network (this is really just for backwards comptability and is the same behavior as described above.)
+
+2. If `LOCAL_TLD` is set (e.g. to local) write `/etc/dnsmasq.conf` to use `127.0.0.11` for that TLD. Also, write `/etc/resolv.conf` to search `LOCAL_TLD` so that containers can access the addresses of the services without having to know to append `.local` to match the rule in `/etc/dnsmasq.conf`. This will require aliases with the TLD in each of the containers that need to be accessible from within the wireguard network. An alias should look something like this (e.g. for `LOCAL_TLD=ghost`).
+
+```
+filebot:
+...
+  networks:
+    default:
+      aliases:
+        - filebot.ghost
+```
+
+which will result in `filebot` being accessible from containers within the `wireguard` network.
+
+3. If `SERVICE_NAMES` is set (a list of services to make available from within the wireguard network), write each service name individually to `/etc/dnsmasq.conf` to force `127.0.0.11` as the DNS server for each service address. This is nice because you don't have to write an alias for each service to make available, but you do need to list out all of the services. A sample `SERVICE_NAMES` variable is set in the `docker-compose.yml` file. It shouldn't need to be modified, but if there is a reason to, open an issue and I can make it pull from the `.env` file.
+
+The last three settings are mutually exclusive. Only one of the mechanisms should be used. Of the last two, I'm not really sure which one I prefer, but they're both better than mounting docker.sock in my opinion.
+
 # Thank You
 ## Linuxserver
 [linuxserverurl]: https://linuxserver.io

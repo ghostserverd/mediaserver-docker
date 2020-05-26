@@ -38,13 +38,19 @@ services:
 #      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}/udp"
 #    environment:
 #      - LOCAL_NETWORK=${LOCAL_NETWORK}
-#      # NETWORK_NAME is not needed if you're using the default docker-compose network
-#      - NETWORK_NAME=${NETWORK_NAME}
+#      # NETWORK_NAME is not needed unless you are mounting docker.sock to write /etc/hosts
+#      # - NETWORK_NAME=${NETWORK_NAME}
+#      # this is required unless you are mounting docker.sock to write /etc/hosts
+#      - IPTABLES_MASQ=0
+#      # space separated  list of docker service names to make addressable
+#      - SERVICE_NAMES=filebot sonarr radarr bazarr jackett announcedd heimdall tautulli plex
+#      # local TLD to use when routing DNS requests which requires aliases for each service to be addressable from within the wireguard network
+#      # - LOCAL_TLD=ghost
 #    volumes:
 #      - ${CONFIG_DIR}/wireguard:/etc/wireguard
 #      - /lib/modules:/lib/modules
-#      # this is needed to write /etc/hosts for non-wireguard service DNS resolution (e.g. filebot)
-#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#      # this is no longer necessary but if enabled, will cause the /etc/hosts file to be written with all available services
+#      # - /var/run/docker.sock:/var/run/docker.sock:ro
 
   transmission:
     image: ghostserverd/transmission-combustion

@@ -370,6 +370,8 @@ The container is already automatically configured to call `filebot` to post-proc
 ~The container is already automatically configured to call `filebot` to post-process a download.~
 
 Apparently I forgot to build this into the container. Until I fix this, take the following steps:
+  * Navigate to nzbget `Settings` > `PATHS`
+  * Set `ScriptDir` to `/usr/loca/bin`
   * Navigate to nzbget `Settings` > `EXTENSION SCRIPTS`
   * Next to the `Extensions` textbox, select the `Choose` button
   * Select the checkbox next to `nzbget-postprocess`

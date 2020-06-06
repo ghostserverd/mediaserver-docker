@@ -545,9 +545,9 @@ If you really want to donate to me, you can do that here
 * Consider switching from `nginx` to `traefik`
 * Auto-configuration for linking `radarr` and `sonarr` to `transmission`
 * Auto-configuration for linking `radarr` and `sonarr` to `nzbget`
-* Better configuration options for `nzbget`
 * Auto-configuration for `plex` libraries
 * Improve documentation (maybe blog post with pictures)
+* ~~Better configuration options for `nzbget`~~
 * ~~Wireguard as a network container for downloaders~~
 * ~~Additional containers (`tautulli`, `muximux`, `portainer`)~~
 * ~~Add reverse proxy support (`traefik`?)~~

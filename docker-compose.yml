@@ -115,6 +115,10 @@ services:
 #      - PUID=${PUID}
 #      - PGID=${PGID}
 #      - TZ=${TIMEZONE}
+#      - NZBGET_WEB_USER=${NZBGET_WEB_USER}
+#      - NZBGET_WEB_PASS=${NZBGET_WEB_PASS}
+#      - NZBGET_MAIN_DIR=${NZBGET_MAIN_DIR}
+#      - NZBGET_SCRIPT_DIR=${NZBGET_SCRIPT_DIR}
 #      - FILEBOT_PORT=${FILEBOT_PORT}
 #    volumes:
 #      - ${CONFIG_DIR}/nzbget:/config
@@ -130,6 +134,10 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TIMEZONE}
+      - NZBGET_WEB_USER=${NZBGET_WEB_USER}
+      - NZBGET_WEB_PASS=${NZBGET_WEB_PASS}
+      - NZBGET_MAIN_DIR=${NZBGET_MAIN_DIR}
+      - NZBGET_SCRIPT_DIR=${NZBGET_SCRIPT_DIR}
       - FILEBOT_PORT=${FILEBOT_PORT}
     volumes:
       - ${CONFIG_DIR}/nzbget:/config

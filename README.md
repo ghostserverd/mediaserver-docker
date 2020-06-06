@@ -367,17 +367,19 @@ The container is already automatically configured to call `filebot` to post-proc
 | ------- | ---- |
 | NZBGET_PORT | the web interface port for nzbget |
 
-~The container is already automatically configured to call `filebot` to post-process a download.~
+The container is already automatically configured to call `filebot` to post-process a download.
 
-Apparently I forgot to build this into the container. Until I fix this, take the following steps:
-  * Navigate to nzbget `Settings` > `PATHS`
-  * Set `ScriptDir` to `/usr/loca/bin`
-  * Navigate to nzbget `Settings` > `EXTENSION SCRIPTS`
-  * Next to the `Extensions` textbox, select the `Choose` button
-  * Select the checkbox next to `nzbget-postprocess`
-  * You should see the textbox populated with `nzbget-postprocess.sh`
+These are the automatic configurations in `nzbget` now:
 
-See [the documentation](https://nzbget.net/documentation) for instructions on setting up `nzbget`.
+* The `MainDir` will automatically be set to `/downloads/nzb`
+* The `ScriptDir` will automatically be set to `/usr/local/bin`
+* The `Extensions` will automatically be set to `nzbget-postprocess.sh`
+* The `ControlUsername` will automatically be set to whatever is configured in `NZBGET_WEB_USER` _iff_ it is set
+* The `ControlPassword` will automatically be set to whatever is configured in `NZBGET_WEB_PASS` _iff_ it is set
+
+The paths are configured that way to support calling `filebot` with the post-process script.
+
+See [the documentation](https://nzbget.net/documentation) for instructions on setting up the rest of `nzbget`.
 
 ## Configure Plex
 

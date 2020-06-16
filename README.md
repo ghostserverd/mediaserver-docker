@@ -529,9 +529,9 @@ This would also not be possible without filebot. This has been updated to use th
 ## ASCII word generation
 Thanks to patorjk for his [ascii text generator](http://patorjk.com/software/taag/#p=display&f=Ogre&t=ghost)
 
-[combustionurl]: https://secretmapper.github.io/combustion/
+[combustionurl]: https://github.com/Secretmapper/combustion
 
-## conbustion UI for transmission
+## combustion UI for transmission
 Thanks to `secretmapper` for the `combustion` UI for `transmission`
 
 * [Combustion][combustionurl]

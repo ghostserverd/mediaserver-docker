@@ -16,6 +16,7 @@
     - [Configure Jackett](#configure-jackett)
     - [Configure Sonarr](#configure-sonarr)
     - [Configure Radarr](#configure-radarr)
+    - [Configure Bazarr](#configure-bazarr)
     - [Configure filebot](#configure-filebot)
     - [Configure transmission](#configure-transmission)
     - [Configure nzbget](#configure-nzbget)
@@ -347,6 +348,36 @@ Step-by-step for those who need it
     - Click the `+` sign
 - There are many other configuration options for `radarr` that are not covered here. `radarr`'s webpage is [here](https://radarr.video/)
 
+### Configure Bazarr
+
+| variable    | description                        |
+| ----------- | ---------------------------------- |
+| BAZARR_PORT | the port that bazar will listen on |
+
+`<server-ip>:6767`
+
+`bazarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `bazarr` already.
+
+Step-by-step for those who need it
+
+- Add Path Mappings For TV Shows
+  - `Path for Sonarr`: `tv`
+  - `Path for Bazarr`: `tv`
+  
+- Path Mappings For Movies
+  - `Path for Radarr`: `movies`
+  - `Path for Bazarr`: `movies`
+
+- Configure connection settings for Sonarr:
+  - `Hostname or IP Address`: `sonarr` or `localhost` if you use wireguard
+  - `Listening Port`: `8989` or whatever you have set for `SONARR_PORT` in your `.env` file
+  - `API Key`: the `API Key` from `Sonarr`
+
+- Configure connection settings for Radarr:
+  - `Hostname or IP Address`: `radarr` or `localhost` if you use wireguard
+  - `Listening Port`: `7878` or whatever you have set for `RADARR_PORT` in your `.env` file
+  - `API Key`: the `API Key` from `Radarr`
+
 ### Configure filebot
 
 `<server-ip>:7676`
@@ -423,7 +454,7 @@ See [the documentation](https://nzbget.net/documentation) for instructions on se
 - Add some libraries
   - TV Shows will be at `/data/TV Shows` assuming you followed the `/media/TV Shows` convention for `TV_DIR`
   - Movies will be at `/data/Movies` assuming you followed the `/media/Movies` convention for `MOVIES_DIR`
-- ⚠️ Set up your media agents to not use local files (hopefully this will be fixed in the future)
+- ⚠️ If you don't use `Bazarr` set up your media agents to not use local files (hopefully this will be fixed in the future)
   - There is a problem that I have not been able to fix yet where local TV Series art is not available. It appears the artwork downloaded by `filebot` is not readable by `plex` for an unkown reason (I don't believe it's permissions related, but if you have ideas, please open an issue).
   - To get around this, uncheck `Local Media Assets` for all Agents under `Settings` > `Server` > `Agents`. Artwork will be downloaded by plex and accessible.
 - Kill and restart the containers after logging in to Plex if you have Plexpass

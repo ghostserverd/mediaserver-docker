@@ -364,16 +364,6 @@ Step-by-step for those who need it
 
 Step-by-step for those who need it
 
-- Add Path Mappings For TV Shows
-
-  - `Path for Sonarr`: `tv`
-  - `Path for Bazarr`: `tv`
-
-- Path Mappings For Movies
-
-  - `Path for Radarr`: `movies`
-  - `Path for Bazarr`: `movies`
-
 - Configure connection settings for Sonarr:
 
   - `Hostname or IP Address`: `sonarr`

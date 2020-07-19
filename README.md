@@ -182,8 +182,8 @@ Configuring a base directory with `downloads` and `media` present allows `filebo
 | variable     | description                                                                                                                                                                                                                                                                        |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | CONFIG_DIR   | where configuration for each of the services will live. You'll end up with multiple directories in here, one for each service. If you move this directory to a different volume with a different instance of the whole media server, it should retain your various configurations. |
-| DOWNLOAD_DIR | where various services will download files to. ⚠️ This should not be on a small partition as it will contain media files.                                                                                                                                                           |
-| MEDIA_DIR    | where your media will be copied to. ⚠️ This should not be on a small partition as it will contain media files.                                                                                                                                                                      |
+| DOWNLOAD_DIR | where various services will download files to. ⚠️ This should not be on a small partition as it will contain media files.                                                                                                                                                          |
+| MEDIA_DIR    | where your media will be copied to. ⚠️ This should not be on a small partition as it will contain media files.                                                                                                                                                                     |
 | TV_DIR       | where your TV shows will be placed by `filebot` on download completion. It should be a subdirectory of `MEDIA_DIR`                                                                                                                                                                 |
 | MOVIES_DIR   | where your TV shows will be placed by `filebot` on download completion. It should be a subdirectory of `MEDIA_DIR`                                                                                                                                                                 |
 | BASE_DIR     | a shared directory that houses `media` and `downloads` directories to be used for hardlinks                                                                                                                                                                                        |
@@ -237,11 +237,12 @@ Append `-d` to run in detached mode. The first time you run a service, it is pro
 
 `sonarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `sonarr` already.
 
-⚠️ It is critical that you use `transmission` instead of the IP address when configuring the download client, as well as `jackett` instead of the IP when setting up your indexer. This is because this uses docker-compose networking which means each service is accessible at the name of the service, rather than the host or even local IP address. If you use wireguard for `transmission` or `jackett` use `localhost` instead.
+⚠️ It is critical that you use `transmission` instead of the IP address when configuring the download client, as well as `jackett` instead of the IP when setting up your indexer. This is because this uses docker-compose networking which means each service is accessible at the name of the service, rather than the host or even local IP address.
 
 Step-by-step for those who need it
 
 - Add an Indexer
+
   - Click on the `Settings` button at the top
   - Click on the `Indexers` tab
   - Click the big `+` symbol
@@ -249,7 +250,7 @@ Step-by-step for those who need it
   - Configure your `Torznab` feed
     - `Name` : the name of this indexer (doesn't matter, just name it the name of your tracker)
     - `URL` : the `Copy Torznab Feed` url from `jackett` that you saved earlier
-      - ⚠️ It is necessary to replace the IP with `jackett` or `localhost` if you use wireguard for indexer
+      - ⚠️ It is necessary to replace the IP with `jackett`
         - `http://jackett:9117/api/v2.0/indexers/<indexer>/results/torznab/` instead of
         - `http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/`
     - `API Key` : the `API Key` from `jackett` that you saved earlier
@@ -257,6 +258,7 @@ Step-by-step for those who need it
   - Click `Save`
 
 - Add a Download Client
+
   - Click on the `Settings` button at the top
   - Click on the `Download Client` tab
   - Under `Completed Download Handling` toggle `Enable` from Yes to No
@@ -266,7 +268,7 @@ Step-by-step for those who need it
   - Click on `transmission`
   - Configure your Download Client
     - `Name` : whatever you want; probably `transmission`
-    - `Host` : `transmission` or `localhost` if you use wireguard
+    - `Host` : `transmission`
     - `Port` : `5656` or whatever you have set for `TRANS_WEBUI_PORT` in your `.env` file
     - `Username` : `admin` or whatever you have set for `TRANS_WEBUI_USER` in your `.env` file
     - `Password` : `adminadmin` or whatever you have set for `TRANS_WEBUI_PASS` in your `.env` file
@@ -298,11 +300,12 @@ Step-by-step for those who need it
 
 `radarr` should be configurable the same as any other installation of it. Feel free to skip these steps if you know how to configure `radarr` already.
 
-⚠️ It is critical that you use `transmission` instead of the IP address when configuring the download client, as well as `jackett` instead of the IP when setting up your indexer. This is because this uses docker-compose networking which means each service is accessible at the name of the service, rather than the host or even local IP address. If you use wireguard for `transmission` or `jackett` use `localhost` instead.
+⚠️ It is critical that you use `transmission` instead of the IP address when configuring the download client, as well as `jackett` instead of the IP when setting up your indexer. This is because this uses docker-compose networking which means each service is accessible at the name of the service, rather than the host or even local IP address.
 
 Step-by-step for those who need it
 
 - Add an Indexer
+
   - Click on the `Settings` button at the top
   - Click on the `Indexers` tab
   - Click the big `+` symbol
@@ -310,7 +313,7 @@ Step-by-step for those who need it
   - Configure your `Torznab` feed
     - `Name` : the name of this indexer (doesn't matter, just name it the name of your tracker)
     - `URL` : the `Copy Torznab Feed` url from `jackett` that you saved earlier
-      - ⚠️ It is necessary to replace the IP with `jackett` or `localhost` if you use wireguard for indexer
+      - ⚠️ It is necessary to replace the IP with `jackett`
         - `http://jackett:9117/api/v2.0/indexers/<indexer>/results/torznab/` instead of
         - `http://192.168.1.11:9117/api/v2.0/indexers/<indexer>/results/torznab/`
     - `API Key` : the `API Key` from `Jackett` that you saved earlier
@@ -318,6 +321,7 @@ Step-by-step for those who need it
   - Click `Save`
 
 - Add a Download Client
+
   - Click on the `Settings` button at the top
   - Click on the `Download Client` tab
   - Under `Completed Download Handling` toggle `Enable` from Yes to No
@@ -327,7 +331,7 @@ Step-by-step for those who need it
   - Click on `transmission`
   - Configure your Download Client
     - `Name` : whatever you want; probably `transmission`
-    - `Host` : `transmission` or `localhost` if you use wireguard
+    - `Host` : `transmission`
     - `Port` : `5656` or whatever you have set for `TRANS_WEBUI_PORT` in your `.env` file
     - `Username` : `admin` or whatever you have set for `TRANS_WEBUI_USER` in your `.env` file
     - `Password` : `adminadmin` or whatever you have set for `TRANS_WEBUI_PASS` in your `.env` file
@@ -361,20 +365,23 @@ Step-by-step for those who need it
 Step-by-step for those who need it
 
 - Add Path Mappings For TV Shows
+
   - `Path for Sonarr`: `tv`
   - `Path for Bazarr`: `tv`
-  
+
 - Path Mappings For Movies
+
   - `Path for Radarr`: `movies`
   - `Path for Bazarr`: `movies`
 
 - Configure connection settings for Sonarr:
-  - `Hostname or IP Address`: `sonarr` or `localhost` if you use wireguard
+
+  - `Hostname or IP Address`: `sonarr`
   - `Listening Port`: `8989` or whatever you have set for `SONARR_PORT` in your `.env` file
   - `API Key`: the `API Key` from `Sonarr`
 
 - Configure connection settings for Radarr:
-  - `Hostname or IP Address`: `radarr` or `localhost` if you use wireguard
+  - `Hostname or IP Address`: `radarr`
   - `Listening Port`: `7878` or whatever you have set for `RADARR_PORT` in your `.env` file
   - `API Key`: the `API Key` from `Radarr`
 
@@ -507,11 +514,11 @@ Download or build a wireguard config file from your VPN provider. For example, m
 To proxy an additional container through the `wireguard` container's network, add the service name (e.g. `transmission`) to the list of network aliases defined in the `wireguard` service.
 
 ```yaml
-    networks:
-      default:
-        aliases:
-          - nzbget
-          - transmission
+networks:
+  default:
+    aliases:
+      - nzbget
+      - transmission
 ```
 
 Then update the new service's definition (e.g. `transmission`) to remove the port mapping list, and add
@@ -548,16 +555,16 @@ There are now three options for enabling docker DNS resolution from within the w
 
 2. If `LOCAL_TLD` is set (e.g. to local) write `/etc/dnsmasq.conf` to use `127.0.0.11` for that TLD. Also, write `/etc/resolv.conf` to search `LOCAL_TLD` so that containers can access the addresses of the services without having to know to append `.local` to match the rule in `/etc/dnsmasq.conf`. This will require aliases with the TLD in each of the containers that need to be accessible from within the wireguard network. An alias should look something like this (e.g. for `LOCAL_TLD=ghost`).
 
-    ```yaml
-    filebot:
-    ...
-      networks:
-        default:
-          aliases:
-            - filebot.ghost
-    ```
+   ```yaml
+   filebot:
+   ---
+   networks:
+     default:
+       aliases:
+         - filebot.ghost
+   ```
 
-    which will result in `filebot` being accessible from containers within the `wireguard` network.
+   which will result in `filebot` being accessible from containers within the `wireguard` network.
 
 3. If `SERVICE_NAMES` is set (a list of services to make available from within the wireguard network), write each service name individually to `/etc/dnsmasq.conf` to force `127.0.0.11` as the DNS server for each service address. This is nice because you don't have to write an alias for each service to make available, but you do need to list out all of the services. A sample `SERVICE_NAMES` variable is set in the `docker-compose.yml` file. It shouldn't need to be modified, but if there is a reason to, open an issue and I can make it pull from the `.env` file.
 

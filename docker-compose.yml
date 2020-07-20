@@ -12,45 +12,45 @@
 version: "3"
 
 services:
-  #  wireguard:
-  #    image: ghostserverd/wireguard
-  #    container_name: wireguard
-  #    restart: always
-  #    privileged: true
-  #    sysctls:
-  #      - "net.ipv6.conf.all.disable_ipv6=0"
-  #      - "net.ipv6.conf.default.forwarding=1"
-  #      - "net.ipv6.conf.all.forwarding=1"
-  #      - "net.ipv4.ip_forward=1"
-  #    cap_add:
-  #      - NET_ADMIN
-  #      - SYS_MODULE
-  #    networks:
-  #      default:
-  #        aliases:
-  #          - nzbget
-  #          - transmission
-  #    ports:
-  #      - "${NZBGET_PORT}:6789"
-  #      - "${TRANS_WEBUI_PORT}:${TRANS_WEBUI_PORT}"
-  #      # TRANS_CONNECTION_PORT may need to be port forwarded by your VPN
-  #      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}"
-  #      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}/udp"
-  #    environment:
-  #      - LOCAL_NETWORK=${LOCAL_NETWORK}
-  #      # NETWORK_NAME is not needed unless you are mounting docker.sock to write /etc/hosts
-  #      # - NETWORK_NAME=${NETWORK_NAME}
-  #      # this is required unless you are mounting docker.sock to write /etc/hosts
-  #      - IPTABLES_MASQ=0
-  #      # space separated  list of docker service names to make addressable
-  #      - SERVICE_NAMES=filebot sonarr radarr bazarr jackett heimdall tautulli plex
-  #      # local TLD to use when routing DNS requests which requires aliases for each service to be addressable from within the wireguard network
-  #      # - LOCAL_TLD=ghost
-  #    volumes:
-  #      - ${CONFIG_DIR}/wireguard:/etc/wireguard
-  #      - /lib/modules:/lib/modules
-  #      # this is no longer necessary but if enabled, will cause the /etc/hosts file to be written with all available services
-  #      # - /var/run/docker.sock:/var/run/docker.sock:ro
+#  wireguard:
+#    image: ghostserverd/wireguard
+#    container_name: wireguard
+#    restart: always
+#    privileged: true
+#    sysctls:
+#      - "net.ipv6.conf.all.disable_ipv6=0"
+#      - "net.ipv6.conf.default.forwarding=1"
+#      - "net.ipv6.conf.all.forwarding=1"
+#      - "net.ipv4.ip_forward=1"
+#    cap_add:
+#      - NET_ADMIN
+#      - SYS_MODULE
+#    networks:
+#      default:
+#        aliases:
+#          - nzbget
+#          - transmission
+#    ports:
+#      - "${NZBGET_PORT}:6789"
+#      - "${TRANS_WEBUI_PORT}:${TRANS_WEBUI_PORT}"
+#      # TRANS_CONNECTION_PORT may need to be port forwarded by your VPN
+#      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}"
+#      - "${TRANS_CONNECTION_PORT}:${TRANS_CONNECTION_PORT}/udp"
+#    environment:
+#      - LOCAL_NETWORK=${LOCAL_NETWORK}
+#      # NETWORK_NAME is not needed unless you are mounting docker.sock to write /etc/hosts
+#      # - NETWORK_NAME=${NETWORK_NAME}
+#      # this is required unless you are mounting docker.sock to write /etc/hosts
+#      - IPTABLES_MASQ=0
+#      # space separated  list of docker service names to make addressable
+#      - SERVICE_NAMES=filebot sonarr radarr bazarr jackett heimdall tautulli plex
+#      # local TLD to use when routing DNS requests which requires aliases for each service to be addressable from within the wireguard network
+#      # - LOCAL_TLD=ghost
+#    volumes:
+#      - ${CONFIG_DIR}/wireguard:/etc/wireguard
+#      - /lib/modules:/lib/modules
+#      # this is no longer necessary but if enabled, will cause the /etc/hosts file to be written with all available services
+#      # - /var/run/docker.sock:/var/run/docker.sock:ro
 
   transmission:
     image: ghostserverd/transmission-combustion
@@ -103,27 +103,27 @@ services:
       - ${MEDIA_DIR}:/media
       - ${BASE_DIR}:/share
 
-  ### this is how to define the nzbget service to send all traffic through the wireguard container
-  ### the difference is adding network_mode and removing any port mappings
-  #  nzbget:
-  #    image: ghostserverd/nzbget
-  #    container_name: nzbget
-  #    restart: always
-  #    network_mode: "service:wireguard"
-  #    depends_on:
-  #      - wireguard
-  #    environment:
-  #      - PUID=${PUID}
-  #      - PGID=${PGID}
-  #      - TZ=${TIMEZONE}
-  #      - NZBGET_WEB_USER=${NZBGET_WEB_USER}
-  #      - NZBGET_WEB_PASS=${NZBGET_WEB_PASS}
-  #      - NZBGET_MAIN_DIR=${NZBGET_MAIN_DIR}
-  #      - NZBGET_SCRIPT_DIR=${NZBGET_SCRIPT_DIR}
-  #      - FILEBOT_PORT=${FILEBOT_PORT}
-  #    volumes:
-  #      - ${CONFIG_DIR}/nzbget:/config
-  #      - ${DOWNLOAD_DIR}/nzb:/downloads/nzb
+### this is how to define the nzbget service to send all traffic through the wireguard container
+### the difference is adding network_mode and removing any port mappings
+#  nzbget:
+#    image: ghostserverd/nzbget
+#    container_name: nzbget
+#    restart: always
+#    network_mode: "service:wireguard"
+#    depends_on:
+#      - wireguard
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TIMEZONE}
+#      - NZBGET_WEB_USER=${NZBGET_WEB_USER}
+#      - NZBGET_WEB_PASS=${NZBGET_WEB_PASS}
+#      - NZBGET_MAIN_DIR=${NZBGET_MAIN_DIR}
+#      - NZBGET_SCRIPT_DIR=${NZBGET_SCRIPT_DIR}
+#      - FILEBOT_PORT=${FILEBOT_PORT}
+#    volumes:
+#      - ${CONFIG_DIR}/nzbget:/config
+#      - ${DOWNLOAD_DIR}/nzb:/downloads/nzb
 
   nzbget:
     image: ghostserverd/nzbget

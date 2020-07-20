@@ -545,16 +545,19 @@ There are now three options for enabling docker DNS resolution from within the w
 
 2. If `LOCAL_TLD` is set (e.g. to local) write `/etc/dnsmasq.conf` to use `127.0.0.11` for that TLD. Also, write `/etc/resolv.conf` to search `LOCAL_TLD` so that containers can access the addresses of the services without having to know to append `.local` to match the rule in `/etc/dnsmasq.conf`. This will require aliases with the TLD in each of the containers that need to be accessible from within the wireguard network. An alias should look something like this (e.g. for `LOCAL_TLD=ghost`).
 
-   ```yaml
-   filebot:
-   ---
-   networks:
-     default:
-       aliases:
-         - filebot.ghost
-   ```
+    ```yaml
+    filebot:
+      image: ghostserverd/filebot:4.9.x
+        container_name: filebot
+        restart: always
+        networks:
+      networks:
+        default:
+          aliases:
+            - filebot.ghost
+    ```
 
-   which will result in `filebot` being accessible from containers within the `wireguard` network.
+    which will result in `filebot` being accessible from containers within the `wireguard` network.
 
 3. If `SERVICE_NAMES` is set (a list of services to make available from within the wireguard network), write each service name individually to `/etc/dnsmasq.conf` to force `127.0.0.11` as the DNS server for each service address. This is nice because you don't have to write an alias for each service to make available, but you do need to list out all of the services. A sample `SERVICE_NAMES` variable is set in the `docker-compose.yml` file. It shouldn't need to be modified, but if there is a reason to, open an issue and I can make it pull from the `.env` file.
 

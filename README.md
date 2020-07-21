@@ -551,10 +551,9 @@ There are now three options for enabling docker DNS resolution from within the w
         container_name: filebot
         restart: always
         networks:
-      networks:
-        default:
-          aliases:
-            - filebot.ghost
+          default:
+            aliases:
+              - filebot.ghost
     ```
 
     which will result in `filebot` being accessible from containers within the `wireguard` network.

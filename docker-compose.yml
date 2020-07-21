@@ -43,7 +43,7 @@ services:
 #      # this is required unless you are mounting docker.sock to write /etc/hosts
 #      - IPTABLES_MASQ=0
 #      # space separated  list of docker service names to make addressable
-#      - SERVICE_NAMES=filebot sonarr radarr bazarr jackett announcedd heimdall tautulli plex
+#      - SERVICE_NAMES=filebot sonarr radarr bazarr jackett heimdall tautulli plex
 #      # local TLD to use when routing DNS requests which requires aliases for each service to be addressable from within the wireguard network
 #      # - LOCAL_TLD=ghost
 #    volumes:

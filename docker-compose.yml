@@ -71,6 +71,10 @@ services:
       - TRANS_MAX_RATIO=${TRANS_MAX_RATIO}
       - TRANS_CONNECTION_PORT=${TRANS_CONNECTION_PORT}
       - FILEBOT_PORT=${FILEBOT_PORT}
+      - SONARR_API_KEY=${SONARR_API_KEY}
+      - SONARR_PORT=${SONARR_PORT}
+      - RADARR_API_KEY=${RADARR_API_KEY}
+      - RADARR_PORT=${RADARR_PORT}
     volumes:
       - ${CONFIG_DIR}/transmission:/config
       - ${DOWNLOAD_DIR}:/downloads
@@ -140,6 +144,10 @@ services:
       - NZBGET_MAIN_DIR=${NZBGET_MAIN_DIR}
       - NZBGET_SCRIPT_DIR=${NZBGET_SCRIPT_DIR}
       - FILEBOT_PORT=${FILEBOT_PORT}
+      - SONARR_API_KEY=${SONARR_API_KEY}
+      - SONARR_PORT=${SONARR_PORT}
+      - RADARR_API_KEY=${RADARR_API_KEY}
+      - RADARR_PORT=${RADARR_PORT}
     volumes:
       - ${CONFIG_DIR}/nzbget:/config
       - ${DOWNLOAD_DIR}/nzb:/downloads/nzb

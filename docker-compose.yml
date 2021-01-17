@@ -328,7 +328,7 @@ services:
     restart: always
 
   portainer:
-    image: portainer/portainer
+    image: portainer/portainer-ce
     container_name: portainer
     restart: always
     ports:

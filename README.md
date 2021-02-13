@@ -441,6 +441,14 @@ See [the documentation](https://nzbget.net/documentation) for instructions on se
 
 ### Configure Plex
 
+The first time that you set up your plex server, you will need to claim the server to associate it with your plex account. You need to access the server via `localhost` or `127.0.0.1` in order to claim it. The easiest way to accomplish this is to create an SSH tunnel to your server so you can access plex on port 32400 on localhost.
+
+```
+ssh <server-ip> -L 32400:localhost:32400
+```
+
+Once you do this, you can now log into plex via `localhost:32400/web` or `127.0.0.1:32400/web` and claim the server. Once the server has been claimed, you can log into it directly via the server's IP address.
+
 | variable      | description                                                                                                  |
 | ------------- | ------------------------------------------------------------------------------------------------------------ |
 | PLUGIN_LIST   | a list of plugins to install. supported plugins are `trakt` and `subzero`. leave empty to install no plugins |

@@ -335,7 +335,7 @@ Step-by-step for those who need it
     - `Port` : `5656` or whatever you have set for `TRANS_WEBUI_PORT` in your `.env` file
     - `Username` : `admin` or whatever you have set for `TRANS_WEBUI_USER` in your `.env` file
     - `Password` : `adminadmin` or whatever you have set for `TRANS_WEBUI_PASS` in your `.env` file
-    - `Category`: `sonarr` - this allows transmission GC to properly remove torrents after seed limits exceeds
+    - `Category`: `radarr` - this allows transmission GC to properly remove torrents after seed limits exceeds
   - Click `Test` to verify that it is configured properly
   - Click `Save`
 

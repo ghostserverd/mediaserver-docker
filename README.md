@@ -171,13 +171,13 @@ MOVIES_DIR=/some/directory/media_server/media/Movies
 BASE_DIR=/some/directory/media_server
 ```
 
-Note that there is a base directory that holds both `media` and `downloads`
+Note that there is a base volume mount that holds both `media` and `downloads`
 
 ```sh
 /some/directory/media_server
 ```
 
-Configuring a base directory with `downloads` and `media` present allows `filebot` to take advantage of `hardlinks` when renaming and moving files. Hardlinks are much quicker than actually copying the file, but they require that the source and destination be on the same device which is what the base directory accomplishes.
+Configuring a single mount that contains both `downloads` and `media` allows `filebot` to take advantage of `hardlinks` when renaming and moving files. Hardlinks are much quicker than actually copying the file, but they require that the source and destination be on the same volume in order to work.
 
 | variable     | description                                                                                                                                                                                                                                                                        |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
